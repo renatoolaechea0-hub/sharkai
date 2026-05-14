@@ -1164,26 +1164,6 @@ function showPage(id) {
   if (el) el.classList.add('active');
 }
 
-  if (email.toLowerCase() === 'ai@sharkai.pe') {
-    showPage('page-admin');
-    return;
-  }
-  showPage('page-app');
-  setTimeout(function() {
-    showSection('dashboard');
-    buildChart();
-    animateStats();
-  }, 150);
-}
-
-  showPage('page-app');
-  setTimeout(function() {
-    showSection('dashboard');
-    buildChart();
-    animateStats();
-  }, 150);
-}
-
 // ══ SECTION NAV ══
 function showSection(name) {
   ['dashboard','pedidos','menu','clientes','llamadas','config'].forEach(function(s) {
