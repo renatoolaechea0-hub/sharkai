@@ -1,818 +1,1301 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Automatiza tus citas y llamadas con IA. Disponible 24/7 para restaurantes, barberías, spas, salones de belleza y call centers.">
-<title>Shark.AI — Tu Asistente de Voz Inteligente</title>
+<title>Shark.AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --ink:    #0a0a0f;
-    --ink2:   #111118;
-    --ink3:   #1a1a24;
-    --wire:   rgba(255,255,255,0.07);
-    --wire2:  rgba(255,255,255,0.12);
-    --chalk:  #f0ede8;
-    --chalk2: rgba(240,237,232,0.55);
-    --chalk3: rgba(240,237,232,0.30);
-    --accent: #c8f05a;
-    --accent2:#b8e04a;
-    --red:    #ff4f4f;
-    --sans:   'DM Sans', sans-serif;
-    --serif:  'Instrument Serif', serif;
-  }
-
-  html { scroll-behavior: smooth; }
-  body {
-    background: var(--ink);
-    color: var(--chalk);
-    font-family: var(--sans);
-    font-size: 16px;
-    line-height: 1.6;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  a { text-decoration: none; color: inherit; }
-
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 48px;
-    height: 64px;
-    background: rgba(10,10,15,0.82);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border-bottom: 1px solid var(--wire);
-  }
-
-  .logo {
-    display: flex; align-items: center; gap: 9px;
-    font-family: var(--serif);
-    font-size: 21px;
-    color: var(--chalk);
-  }
-
-  .logo-dot {
-    width: 7px; height: 7px;
-    background: var(--accent);
-    border-radius: 50%;
-    animation: pulse 2.4s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    0%,100% { opacity:1; transform:scale(1); }
-    50%      { opacity:.35; transform:scale(0.85); }
-  }
-
-  .nav-right {
-    display: flex; align-items: center; gap: 36px;
-  }
-
-  .nav-right a {
-    font-size: 14px; color: var(--chalk2);
-    transition: color .2s;
-  }
-  .nav-right a:hover { color: var(--chalk); }
-
-  .btn-cta {
-    background: var(--accent);
-    color: var(--ink);
-    font-family: var(--sans);
-    font-size: 13px; font-weight: 500;
-    padding: 9px 22px;
-    border-radius: 100px;
-    border: none; cursor: pointer;
-    transition: background .2s, transform .15s;
-    display: inline-block;
-  }
-  .btn-cta:hover { background: var(--accent2); transform: translateY(-1px); }
-
-  .btn-ghost {
-    font-size: 13px; color: var(--chalk2);
-    padding: 9px 22px;
-    border-radius: 100px;
-    border: 1px solid var(--wire2);
-    background: none; cursor: pointer;
-    transition: border-color .2s, color .2s;
-    display: inline-block;
-  }
-  .btn-ghost:hover { border-color: var(--chalk3); color: var(--chalk); }
-
-  /* ── HERO ── */
-  .hero {
-    min-height: 100vh;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    text-align: center;
-    padding: 100px 24px 80px;
-    position: relative; overflow: hidden;
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute; top: -160px; left: 50%;
-    transform: translateX(-50%);
-    width: 700px; height: 700px;
-    background: radial-gradient(circle, rgba(200,240,90,0.07) 0%, transparent 68%);
-    pointer-events: none;
-  }
-
-  /* Two isotipo images like Jesy — decorative bg logos */
-  .hero-iso {
-    position: absolute;
-    opacity: 0.04;
-    pointer-events: none;
-    user-select: none;
-    font-family: var(--serif);
-    font-size: 280px;
-    color: var(--chalk);
-    line-height: 1;
-  }
-  .hero-iso.left  { left: -80px; top: 50%; transform: translateY(-50%) rotate(-12deg); }
-  .hero-iso.right { right: -80px; top: 50%; transform: translateY(-50%) rotate(12deg); }
-
-  h1 {
-    font-family: var(--serif);
-    font-size: clamp(52px, 7.5vw, 92px);
-    font-weight: 400;
-    line-height: 1.04;
-    letter-spacing: -0.025em;
-    max-width: 820px;
-    margin-bottom: 36px;
-    animation: fadeUp .7s ease both;
-  }
-
-  h1 em { font-style: italic; color: var(--accent); }
-
-  @keyframes fadeUp {
-    from { opacity:0; transform:translateY(18px); }
-    to   { opacity:1; transform:translateY(0); }
-  }
-
-  .hero-cta-wrap {
-    animation: fadeUp .7s .15s ease both;
-    margin-bottom: 80px;
-  }
-
-  /* ── CALL CARD — exact Jesy style ── */
-  .call-card {
-    width: 100%; max-width: 480px;
-    background: var(--ink2);
-    border: 1px solid var(--wire2);
-    border-radius: 18px;
-    overflow: hidden;
-    text-align: left;
-    animation: fadeUp .8s .25s ease both;
-    position: relative;
-  }
-
-  .call-top {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 13px 18px;
-    border-bottom: 1px solid var(--wire);
-  }
-
-  .call-id {
-    font-size: 12px; letter-spacing: .5px;
-    color: var(--chalk3);
-  }
-  .call-id strong { color: var(--chalk2); }
-
-  .call-live {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 10px; font-weight: 500;
-    color: var(--red); letter-spacing: .6px;
-  }
-  .call-live-dot {
-    width: 6px; height: 6px;
-    background: var(--red); border-radius: 50%;
-    animation: pulse 1.2s ease-in-out infinite;
-  }
-
-  /* Audio bar — like Jesy */
-  .call-audio {
-    display: flex; align-items: center; gap: 12px;
-    padding: 12px 18px;
-    border-bottom: 1px solid var(--wire);
-  }
-
-  .play-btn {
-    width: 28px; height: 28px;
-    background: var(--accent);
-    border-radius: 50%;
-    border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .play-btn svg { width: 10px; height: 10px; fill: var(--ink); margin-left: 1px; }
-
-  .audio-bar {
-    flex: 1; height: 3px;
-    background: var(--wire2);
-    border-radius: 2px; overflow: hidden;
-    position: relative;
-  }
-
-  .audio-progress {
-    height: 100%;
-    width: 45%;
-    background: var(--accent);
-    border-radius: 2px;
-  }
-
-  .audio-time {
-    font-size: 11px; color: var(--chalk3);
-    white-space: nowrap;
-  }
-
-  .call-messages { padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
-
-  .msg { display: flex; align-items: flex-start; gap: 10px; }
-  .msg.right { flex-direction: row-reverse; }
-
-  .msg-who {
-    font-size: 10px; font-weight: 500;
-    color: var(--chalk3); text-transform: uppercase;
-    letter-spacing: .5px; margin-bottom: 4px;
-  }
-
-  .msg-bubble {
-    font-size: 13px; line-height: 1.55;
-    padding: 9px 13px; border-radius: 12px;
-    max-width: 290px;
-  }
-
-  .msg.left  .msg-bubble { background: var(--ink3); color: var(--chalk2); border-bottom-left-radius: 3px; }
-  .msg.right .msg-bubble { background: rgba(200,240,90,0.1); color: var(--chalk); border-bottom-right-radius: 3px; }
-
-  .call-result {
-    margin: 0 18px 16px;
-    background: rgba(200,240,90,0.07);
-    border: 1px solid rgba(200,240,90,0.18);
-    border-radius: 9px;
-    padding: 9px 13px;
-    font-size: 12px; color: var(--accent);
-    display: flex; align-items: center; gap: 8px;
-  }
-
-  /* POS / Dashboard badge */
-  .pos-badges {
-    display: flex; align-items: center; gap: 10px;
-    padding: 12px 18px;
-    border-top: 1px solid var(--wire);
-    font-size: 11px; color: var(--chalk3);
-    letter-spacing: .4px;
-  }
-
-  .pos-badge {
-    padding: 4px 12px;
-    border: 1px solid var(--wire2);
-    border-radius: 100px;
-    font-size: 11px; color: var(--chalk2);
-  }
-
-  /* ── SECTION BASE ── */
-  .section { padding: 108px 24px; max-width: 1080px; margin: 0 auto; }
-
-  .s-tag {
-    font-size: 11px; letter-spacing: 1.2px;
-    text-transform: uppercase; color: var(--chalk3);
-    display: flex; align-items: center; gap: 8px;
-    margin-bottom: 22px;
-  }
-  .s-tag::before { content: '§'; color: var(--accent); }
-
-  h2 {
-    font-family: var(--serif);
-    font-size: clamp(38px, 5.5vw, 68px);
-    font-weight: 400; line-height: 1.08;
-    letter-spacing: -0.025em;
-    margin-bottom: 18px;
-  }
-  h2 em { font-style: italic; color: var(--accent); }
-
-  .s-sub {
-    font-size: 17px; color: var(--chalk2);
-    max-width: 500px; line-height: 1.65;
-    margin-bottom: 72px;
-  }
-
-  /* ── STEPS — exact Jesy 3 col ── */
-  .steps {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    border: 1px solid var(--wire);
-    border-radius: 18px;
-    overflow: hidden;
-  }
-
-  .step {
-    background: var(--ink2);
-    padding: 44px 36px;
-  }
-  .step + .step { border-left: 1px solid var(--wire); }
-
-  .step-n {
-    font-size: 10px; letter-spacing: 1px;
-    color: var(--chalk3); text-transform: uppercase;
-    margin-bottom: 28px;
-  }
-
-  .step h3 {
-    font-family: var(--serif);
-    font-size: 26px; font-weight: 400;
-    line-height: 1.2; margin-bottom: 14px;
-  }
-
-  .step p { font-size: 14px; color: var(--chalk2); line-height: 1.75; }
-
-  /* ── INDUSTRIES — Jesy layout ── */
-  .industries-wrap { padding: 0 24px 108px; }
-  .industries-inner { max-width: 1080px; margin: 0 auto; }
-
-  .ind-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
-    margin-top: 0;
-  }
-
-  .ind-card {
-    background: var(--ink2);
-    border: 1px solid var(--wire);
-    border-radius: 18px;
-    padding: 44px;
-    transition: background .25s;
-  }
-  .ind-card:hover { background: var(--ink3); }
-
-  .ind-card.wide {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 48px;
-    align-items: center;
-  }
-
-  .ind-card h3 {
-    font-family: var(--serif);
-    font-size: 30px; font-weight: 400;
-    margin-bottom: 14px; line-height: 1.2;
-  }
-
-  .ind-card p { font-size: 14px; color: var(--chalk2); line-height: 1.75; margin-bottom: 22px; }
-
-  .check-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
-  .check-list li { display: flex; gap: 10px; font-size: 13px; color: var(--chalk2); }
-  .check-list li::before { content: '✓'; color: var(--accent); flex-shrink: 0; }
-
-  /* Dashboard mock — Jesy style */
-  .dash-mock {
-    background: var(--ink);
-    border: 1px solid var(--wire2);
-    border-radius: 13px;
-    overflow: hidden;
-    font-size: 12px;
-  }
-
-  .dash-head {
-    display: flex; justify-content: space-between;
-    padding: 11px 16px;
-    border-bottom: 1px solid var(--wire);
-    font-size: 11px; color: var(--chalk3);
-    letter-spacing: .4px;
-  }
-
-  .dash-row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 10px 16px;
-    border-bottom: 1px solid var(--wire);
-    font-size: 12px;
-  }
-  .dash-row:last-child { border-bottom: none; }
-  .dash-row span:first-child { color: var(--chalk2); }
-
-  .badge-live {
-    font-size: 9px; font-weight: 500;
-    color: var(--red);
-    background: rgba(255,79,79,0.12);
-    padding: 2px 8px; border-radius: 100px;
-    letter-spacing: .5px;
-    animation: pulse 1.5s ease-in-out infinite;
-  }
-
-  .badge-ok { color: var(--accent); font-size: 13px; }
-
-  /* Industry tags row */
-  .ind-tags {
-    display: flex; flex-wrap: wrap; gap: 8px;
-    margin-top: 36px; align-items: center;
-  }
-
-  .ind-tag-label { font-size: 13px; color: var(--chalk3); }
-
-  .ind-tag {
-    font-size: 13px; color: var(--chalk2);
-    border: 1px solid var(--wire2);
-    padding: 5px 16px; border-radius: 100px;
-    cursor: pointer; transition: border-color .2s, color .2s;
-  }
-  .ind-tag:hover { border-color: var(--accent); color: var(--accent); }
-  .ind-tag.accent { color: var(--accent); border-color: rgba(200,240,90,0.25); }
-
-  /* ── TESTIMONIAL ── */
-  .testi-wrap { padding: 0 24px 108px; max-width: 1080px; margin: 0 auto; }
-
-  .testi {
-    background: var(--ink2);
-    border: 1px solid var(--wire2);
-    border-radius: 20px;
-    padding: 72px 48px;
-    text-align: center;
-  }
-
-  .testi blockquote {
-    font-family: var(--serif);
-    font-size: clamp(22px, 3.2vw, 36px);
-    font-weight: 400; line-height: 1.45;
-    max-width: 680px; margin: 0 auto 28px;
-  }
-  .testi blockquote em { font-style: italic; color: var(--accent); }
-
-  .testi cite {
-    font-size: 13px; color: var(--chalk3);
-    font-style: normal;
-    display: flex; align-items: center; justify-content: center; gap: 14px;
-  }
-  .testi cite::before {
-    content: ''; display: block;
-    width: 28px; height: 1px; background: var(--wire2);
-  }
-
-  /* ── CTA FINAL ── */
-  .cta-wrap { padding: 0 24px 128px; max-width: 1080px; margin: 0 auto; text-align: center; }
-
-  .cta-box {
-    background: var(--ink2);
-    border: 1px solid var(--wire2);
-    border-radius: 24px;
-    padding: 88px 40px;
-    position: relative; overflow: hidden;
-  }
-
-  .cta-box::after {
-    content: '';
-    position: absolute; bottom: -80px; left: 50%;
-    transform: translateX(-50%);
-    width: 560px; height: 280px;
-    background: radial-gradient(circle, rgba(200,240,90,0.05) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .cta-box h2 { margin-bottom: 16px; }
-  .cta-box p { font-size: 17px; color: var(--chalk2); max-width: 460px; margin: 0 auto 44px; line-height: 1.65; }
-
-  .cta-btns { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
-
-  .cta-note { font-size: 12px; color: var(--chalk3); margin-top: 18px; }
-
-  /* ── FOOTER ── */
-  footer {
-    border-top: 1px solid var(--wire);
-    padding: 64px 48px 44px;
-    max-width: 1080px; margin: 0 auto;
-  }
-
-  .footer-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    gap: 48px;
-    margin-bottom: 52px;
-  }
-
-  .footer-brand p {
-    font-size: 13px; color: var(--chalk3);
-    line-height: 1.75; margin-top: 14px; max-width: 240px;
-  }
-
-  .footer-col h4 {
-    font-size: 10px; letter-spacing: 1px;
-    text-transform: uppercase; color: var(--chalk3);
-    margin-bottom: 18px;
-  }
-
-  .footer-col a {
-    display: block; color: var(--chalk2);
-    font-size: 13px; margin-bottom: 11px;
-    transition: color .2s;
-  }
-  .footer-col a:hover { color: var(--chalk); }
-
-  .footer-socials { display: flex; gap: 14px; margin-top: 18px; }
-  .footer-socials a {
-    width: 32px; height: 32px;
-    border: 1px solid var(--wire2);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--chalk3); font-size: 13px;
-    transition: border-color .2s, color .2s;
-  }
-  .footer-socials a:hover { border-color: var(--accent); color: var(--accent); }
-
-  .footer-bottom {
-    border-top: 1px solid var(--wire);
-    padding-top: 28px;
-    display: flex; justify-content: space-between; align-items: center;
-    font-size: 12px; color: var(--chalk3);
-  }
-
-  /* ── SCROLL REVEAL ── */
-  .reveal {
-    opacity: 0; transform: translateY(22px);
-    transition: opacity .65s ease, transform .65s ease;
-  }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 768px) {
-    nav { padding: 0 20px; }
-    .nav-right a:not(:last-child):not(:nth-last-child(2)) { display: none; }
-    h1 { font-size: 46px; }
-    .steps { grid-template-columns: 1fr; }
-    .step + .step { border-left: none; border-top: 1px solid var(--wire); }
-    .ind-grid { grid-template-columns: 1fr; }
-    .ind-card.wide { grid-column: auto; grid-template-columns: 1fr; }
-    .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
-    .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
-    .testi { padding: 44px 24px; }
-    .cta-box { padding: 60px 24px; }
-  }
+/* PAGE NAVIGATION */
+.page { display: none; }
+.page.active { display: flex; min-height: 100vh; width: 100%; }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --accent:#c8f05a; --accent2:#a8d43a; --ink:#0a0a0f;
+  --bg:#f5f6f8; --surface:#fff; --border:#e8e9ec;
+  --text:#111118; --text2:#6b7280; --text3:#9ca3af;
+  --green:#16a34a; --green-bg:#dcfce7;
+  --red:#dc2626; --red-bg:#fee2e2;
+  --amber:#d97706; --amber-bg:#fef3c7;
+  --blue:#2563eb; --blue-bg:#dbeafe;
+  --sidebar:220px; --topbar:56px;
+  --sans:'DM Sans',sans-serif; --serif:'Instrument Serif',serif;
+}
+html,body { height:100%; font-family:var(--sans); background:var(--bg); color:var(--text); font-size:14px; -webkit-font-smoothing:antialiased; }
+
+/* ── PAGE SYSTEM ── */
+
+
+
+/* ══════════════════════════════════════════
+   AUTH PAGES
+══════════════════════════════════════════ */
+
+.auth-left {
+  width:440px; flex-shrink:0; background:var(--ink);
+  display:flex; flex-direction:column; justify-content:space-between;
+  padding:40px; position:relative; overflow:hidden;
+}
+.auth-left::before {
+  content:''; position:absolute; top:-120px; left:-120px;
+  width:500px; height:500px;
+  background:radial-gradient(circle,rgba(200,240,90,.08) 0%,transparent 65%);
+  pointer-events:none;
+}
+.auth-logo { display:flex; align-items:center; gap:8px; font-family:var(--serif); font-size:22px; color:#fff; text-decoration:none; }
+.auth-logo-dot { width:8px; height:8px; background:var(--accent); border-radius:50%; animation:pulse 2.4s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:.3} }
+.auth-left-content { flex:1; display:flex; flex-direction:column; justify-content:center; padding:32px 0; }
+.auth-left-tag { font-size:11px; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,.3); margin-bottom:20px; display:flex; align-items:center; gap:8px; }
+.auth-left-tag::before { content:'●'; color:var(--accent); font-size:8px; }
+.auth-left h2 { font-family:var(--serif); font-size:38px; font-weight:400; line-height:1.1; letter-spacing:-.02em; color:#fff; margin-bottom:14px; }
+.auth-left h2 em { font-style:italic; color:var(--accent); }
+.auth-left p { font-size:14px; color:rgba(255,255,255,.4); line-height:1.7; max-width:300px; }
+.auth-steps { margin-top:36px; display:flex; flex-direction:column; gap:14px; }
+.auth-step { display:flex; align-items:flex-start; gap:12px; }
+.auth-step-num { width:24px; height:24px; border-radius:50%; background:rgba(200,240,90,.1); border:1px solid rgba(200,240,90,.25); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; color:var(--accent); flex-shrink:0; }
+.auth-step-text { font-size:13px; color:rgba(255,255,255,.5); line-height:1.5; }
+.auth-step-text strong { color:rgba(255,255,255,.8); font-weight:500; }
+.auth-footer { font-size:12px; color:rgba(255,255,255,.2); }
+.auth-right { flex:1; display:flex; align-items:center; justify-content:center; padding:40px 24px; overflow-y:auto; }
+.auth-form-box { width:100%; max-width:380px; }
+.auth-form-title { font-size:22px; font-weight:600; color:var(--text); margin-bottom:6px; }
+.auth-form-sub { font-size:14px; color:var(--text2); margin-bottom:28px; }
+.auth-form-sub a { color:var(--ink); font-weight:500; text-decoration:underline; text-underline-offset:3px; cursor:pointer; }
+
+/* Fields */
+.field { margin-bottom:14px; }
+.field label { display:block; font-size:13px; font-weight:500; color:var(--text); margin-bottom:5px; }
+.field input,.field select,.field textarea {
+  width:100%; padding:10px 14px; font-family:var(--sans); font-size:14px;
+  color:var(--text); background:var(--surface); border:1px solid var(--border);
+  border-radius:8px; outline:none; transition:border-color .2s,box-shadow .2s;
+}
+.field input:focus,.field select:focus,.field textarea:focus { border-color:var(--accent2); box-shadow:0 0 0 3px rgba(168,212,58,.15); }
+.field input::placeholder,.field textarea::placeholder { color:var(--text3); }
+.field-2col { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.field-hint { font-size:11px; color:var(--text3); margin-top:4px; }
+.field-error { font-size:11px; color:var(--red); margin-top:4px; display:none; }
+.field-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:5px; }
+.field-row label { margin-bottom:0; }
+.link-sm { font-size:12px; color:var(--text2); text-decoration:none; transition:color .2s; cursor:pointer; }
+.link-sm:hover { color:var(--text); }
+
+/* Buttons */
+.btn-primary {
+  width:100%; padding:11px; font-family:var(--sans); font-size:14px; font-weight:500;
+  color:var(--ink); background:var(--accent); border:none; border-radius:8px;
+  cursor:pointer; transition:background .2s,transform .15s;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.btn-primary:hover { background:var(--accent2); transform:translateY(-1px); }
+.btn-primary:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+
+/* Password strength */
+.pass-bars { display:flex; gap:4px; margin-top:6px; }
+.pass-bar { height:3px; flex:1; border-radius:2px; background:var(--border); transition:background .3s; }
+
+/* Step indicator */
+.step-ind { display:flex; align-items:center; margin-bottom:24px; }
+.step-ind-dot { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; border:2px solid var(--border); color:var(--text3); background:var(--surface); transition:all .3s; flex-shrink:0; }
+.step-ind-dot.active { border-color:var(--ink); background:var(--ink); color:#fff; }
+.step-ind-dot.done { border-color:var(--accent2); background:var(--accent2); color:var(--ink); }
+.step-ind-line { flex:1; height:2px; background:var(--border); transition:background .3s; }
+.step-ind-line.done { background:var(--accent2); }
+.step-labels { display:flex; justify-content:space-between; margin-bottom:20px; }
+.step-labels span { font-size:11px; color:var(--text3); flex:1; text-align:center; }
+.step-labels span.active { color:var(--text); font-weight:500; }
+.step-panel { display:none; }
+.step-panel.active { display:block; }
+
+/* Plan cards */
+.plan-cards { display:flex; flex-direction:column; gap:10px; margin-bottom:16px; }
+.plan-card { border:2px solid var(--border); border-radius:10px; padding:14px 16px; cursor:pointer; transition:border-color .2s; display:flex; align-items:flex-start; gap:12px; }
+.plan-card.selected { border-color:var(--ink); }
+.plan-radio { width:18px; height:18px; border-radius:50%; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px; transition:border-color .2s; }
+.plan-card.selected .plan-radio { border-color:var(--ink); }
+.plan-radio-dot { width:8px; height:8px; border-radius:50%; background:var(--ink); display:none; }
+.plan-card.selected .plan-radio-dot { display:block; }
+.plan-name { font-size:14px; font-weight:600; color:var(--text); margin-bottom:2px; display:flex; align-items:center; gap:8px; }
+.plan-badge { font-size:10px; font-weight:500; padding:2px 8px; border-radius:100px; background:rgba(200,240,90,.2); color:#4a6b00; }
+.plan-price { font-size:13px; color:var(--text2); margin-bottom:3px; }
+.plan-features { font-size:12px; color:var(--text3); }
+.checkbox-wrap { display:flex; align-items:flex-start; gap:10px; margin-bottom:16px; }
+.checkbox-wrap input { width:15px; height:15px; margin-top:2px; accent-color:var(--ink); cursor:pointer; flex-shrink:0; }
+.checkbox-wrap label { font-size:13px; color:var(--text2); line-height:1.5; cursor:pointer; }
+.checkbox-wrap label a { color:var(--ink); text-decoration:underline; text-underline-offset:2px; }
+.btn-row { display:flex; gap:10px; }
+.btn-back { padding:10px 18px; font-family:var(--sans); font-size:14px; font-weight:500; color:var(--text2); background:var(--surface); border:1px solid var(--border); border-radius:8px; cursor:pointer; }
+.btn-back:hover { background:var(--bg); }
+.btn-next { flex:1; padding:11px; font-family:var(--sans); font-size:14px; font-weight:500; color:var(--ink); background:var(--accent); border:none; border-radius:8px; cursor:pointer; transition:background .2s; }
+.btn-next:hover { background:var(--accent2); }
+
+/* Success */
+.success-msg { display:none; text-align:center; padding:20px 0; }
+.success-icon { width:60px; height:60px; border-radius:50%; background:rgba(168,212,58,.12); border:2px solid var(--accent2); display:flex; align-items:center; justify-content:center; font-size:28px; margin:0 auto 16px; }
+
+/* ══════════════════════════════════════════
+   APP SHELL
+══════════════════════════════════════════ */
+
+
+/* Sidebar */
+.sidebar { width:var(--sidebar); background:var(--surface); border-right:1px solid var(--border); display:flex; flex-direction:column; position:fixed; top:0; left:0; bottom:0; z-index:50; }
+.sidebar-logo { display:flex; align-items:center; gap:8px; padding:18px 18px 14px; border-bottom:1px solid var(--border); font-size:18px; font-weight:600; color:var(--text); text-decoration:none; cursor:pointer; }
+.sidebar-logo-dot { width:8px; height:8px; background:var(--accent2); border-radius:50%; }
+.sidebar-nav { display:flex; flex-direction:column; padding:10px 8px; flex:1; gap:1px; }
+.nav-item { display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px; font-size:13px; color:var(--text2); cursor:pointer; transition:background .15s,color .15s; border:none; background:none; width:100%; text-align:left; font-family:var(--sans); }
+.nav-item:hover { background:var(--bg); color:var(--text); }
+.nav-item.active { background:var(--ink); color:#fff; font-weight:500; }
+.nav-icon { font-size:15px; width:20px; text-align:center; }
+.sidebar-foot { padding:14px; border-top:1px solid var(--border); }
+.user-chip { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; background:var(--bg); }
+.user-av { width:30px; height:30px; border-radius:50%; background:var(--ink); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; color:var(--accent); flex-shrink:0; }
+.user-name { font-size:12px; font-weight:500; color:var(--text); }
+.user-plan { font-size:10px; color:var(--text3); }
+
+/* Main area */
+.main { margin-left:var(--sidebar); flex:1; display:flex; flex-direction:column; min-height:100vh; }
+.topbar { background:var(--surface); border-bottom:1px solid var(--border); padding:0 26px; height:var(--topbar); display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:40; }
+.topbar-title { font-size:16px; font-weight:600; color:var(--text); }
+.topbar-right { display:flex; align-items:center; gap:10px; }
+.content { padding:22px 26px; }
+
+/* Buttons */
+.btn-sm { padding:7px 14px; border-radius:7px; font-family:var(--sans); font-size:13px; font-weight:500; cursor:pointer; border:1px solid var(--border); background:var(--surface); color:var(--text2); transition:background .15s; }
+.btn-sm:hover { background:var(--bg); }
+.btn-ink { background:var(--ink); color:#fff; border-color:var(--ink); }
+.btn-ink:hover { background:#1a1a2e !important; color:#fff !important; }
+.btn-green { background:var(--accent); color:var(--ink); border-color:var(--accent); }
+.btn-green:hover { background:var(--accent2) !important; color:var(--ink) !important; }
+
+/* Stat cards */
+.stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px; }
+.stat-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 18px; }
+.stat-label { font-size:12px; font-weight:500; color:var(--text2); margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+.stat-value { font-size:26px; font-weight:600; color:var(--text); line-height:1; margin-bottom:3px; }
+.stat-sub { font-size:11px; color:var(--text3); }
+
+/* Cards */
+.card { background:var(--surface); border:1px solid var(--border); border-radius:12px; }
+.card-head { padding:14px 18px; border-bottom:1px solid var(--border); font-size:13px; font-weight:600; color:var(--text); display:flex; align-items:center; justify-content:space-between; }
+
+/* Grid layouts */
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+.grid-3-1 { display:grid; grid-template-columns:2fr 1fr; gap:14px; margin-bottom:14px; }
+
+/* Table */
+.table-wrap { background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+table { width:100%; border-collapse:collapse; }
+thead th { font-size:11px; font-weight:500; color:var(--text3); text-transform:uppercase; letter-spacing:.5px; padding:9px 18px; text-align:left; background:var(--bg); border-bottom:1px solid var(--border); }
+tbody td { padding:11px 18px; font-size:13px; color:var(--text2); border-bottom:1px solid var(--border); vertical-align:middle; }
+tbody tr:last-child td { border-bottom:none; }
+tbody tr:hover td { background:#fafafa; cursor:pointer; }
+
+/* Badges */
+.badge { display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:500; padding:3px 9px; border-radius:100px; }
+.badge-live { background:#fef9c3; color:#854d0e; animation:blink 1.5s infinite; }
+.badge-ok { background:var(--green-bg); color:var(--green); }
+.badge-prep { background:var(--blue-bg); color:var(--blue); }
+.badge-cancel { background:var(--red-bg); color:var(--red); }
+.badge-done { background:var(--bg); color:var(--text3); }
+.badge-pickup { background:rgba(200,240,90,.15); color:#4a6b00; }
+.badge-delivery { background:var(--blue-bg); color:var(--blue); }
+.badge-atendida { background:var(--green-bg); color:var(--green); }
+.badge-perdida { background:var(--red-bg); color:var(--red); }
+@keyframes blink { 0%,100%{opacity:1}50%{opacity:.5} }
+
+/* Filters */
+.filters { padding:12px 26px; background:var(--surface); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.filter-tabs { display:flex; gap:4px; }
+.ftab { padding:6px 14px; border-radius:7px; font-size:13px; font-weight:500; cursor:pointer; border:1px solid var(--border); background:none; color:var(--text2); font-family:var(--sans); transition:all .15s; }
+.ftab:hover { background:var(--bg); }
+.ftab.active { background:var(--ink); color:#fff; border-color:var(--ink); }
+.search-input { display:flex; align-items:center; gap:8px; background:var(--bg); border:1px solid var(--border); border-radius:7px; padding:6px 12px; flex:1; max-width:260px; }
+.search-input input { border:none; background:none; font-family:var(--sans); font-size:13px; color:var(--text); outline:none; width:100%; }
+.search-input input::placeholder { color:var(--text3); }
+.date-sel { padding:6px 12px; border-radius:7px; font-family:var(--sans); font-size:13px; color:var(--text2); border:1px solid var(--border); background:var(--surface); outline:none; cursor:pointer; }
+
+/* Bar chart */
+.bar-chart-wrap { display:flex; align-items:flex-end; gap:7px; height:110px; padding-bottom:22px; position:relative; }
+.bar-chart-wrap::after { content:''; position:absolute; bottom:22px; left:0; right:0; height:1px; background:var(--border); }
+.bar-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; }
+.bar-pair { display:flex; gap:2px; align-items:flex-end; width:100%; justify-content:center; }
+.bar { width:9px; border-radius:3px 3px 0 0; }
+.bar.b1 { background:var(--ink); }
+.bar.b2 { background:var(--accent2); }
+.bar-lbl { font-size:9px; color:var(--text3); }
+.chart-legend { display:flex; gap:14px; margin-bottom:10px; }
+.leg-item { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--text2); }
+.leg-dot { width:8px; height:8px; border-radius:2px; }
+
+/* Pico grid */
+.pico-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
+.pico-item { background:var(--bg); border-radius:7px; padding:7px 9px; text-align:center; }
+.pico-time { font-size:11px; font-weight:600; color:var(--text); }
+.pico-bar-wrap { height:4px; background:var(--border); border-radius:2px; margin:4px 0; overflow:hidden; }
+.pico-fill { height:100%; border-radius:2px; background:var(--accent2); }
+.pico-count { font-size:10px; color:var(--text3); }
+
+/* Dashboard rows */
+.dash-row { display:flex; justify-content:space-between; align-items:center; padding:9px 18px; border-bottom:1px solid var(--border); font-size:12px; }
+.dash-row:last-child { border-bottom:none; }
+
+/* Tipo rows */
+.tipo-row { display:flex; align-items:center; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--border); }
+.tipo-row:last-child { border-bottom:none; }
+.tipo-dot { width:8px; height:8px; border-radius:50%; }
+
+/* Mini stats */
+.mini-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px; }
+.mini-stat { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:13px 16px; display:flex; align-items:center; gap:12px; }
+.mini-stat-icon { width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+.mini-stat-val { font-size:20px; font-weight:600; color:var(--text); line-height:1; }
+.mini-stat-lbl { font-size:11px; color:var(--text3); margin-top:2px; }
+
+/* Action btns */
+.action-btn { padding:5px 11px; border-radius:6px; font-size:12px; font-weight:500; cursor:pointer; border:1px solid var(--border); background:none; color:var(--text2); font-family:var(--sans); transition:all .15s; }
+.action-btn:hover { background:var(--bg); }
+.action-btn.ok { border-color:var(--green); color:var(--green); }
+.action-btn.ok:hover { background:var(--green-bg); }
+
+/* Detail panel */
+.overlay { position:fixed; inset:0; background:rgba(0,0,0,.3); z-index:200; display:none; align-items:flex-start; justify-content:flex-end; }
+.overlay.open { display:flex; }
+.detail-panel { width:360px; height:100vh; background:var(--surface); border-left:1px solid var(--border); overflow-y:auto; display:flex; flex-direction:column; animation:slideIn .22s ease; }
+@keyframes slideIn { from{transform:translateX(100%)}to{transform:translateX(0)} }
+.detail-head { padding:16px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; background:var(--surface); z-index:10; }
+.detail-title { font-size:15px; font-weight:600; }
+.close-btn { width:28px; height:28px; border-radius:6px; border:1px solid var(--border); background:none; cursor:pointer; font-size:15px; color:var(--text2); display:flex; align-items:center; justify-content:center; }
+.close-btn:hover { background:var(--bg); }
+.detail-body { padding:18px; flex:1; }
+.detail-sec { margin-bottom:18px; }
+.detail-sec-title { font-size:10px; font-weight:500; text-transform:uppercase; letter-spacing:.6px; color:var(--text3); margin-bottom:10px; }
+.detail-row { display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid var(--border); font-size:13px; }
+.detail-row:last-child { border-bottom:none; }
+.detail-row-lbl { color:var(--text2); }
+.detail-row-val { color:var(--text); font-weight:500; }
+.prod-item { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border); }
+.prod-item:last-child { border-bottom:none; }
+.prod-item-name { font-size:13px; color:var(--text); }
+.prod-item-qty { font-size:11px; color:var(--text3); margin-top:2px; }
+.prod-item-price { font-size:13px; font-weight:500; }
+.total-row { display:flex; justify-content:space-between; padding:10px 0 0; font-size:15px; font-weight:600; }
+.detail-foot { padding:14px 18px; border-top:1px solid var(--border); display:flex; gap:10px; }
+.detail-btn { flex:1; padding:9px; border-radius:8px; font-family:var(--sans); font-size:13px; font-weight:500; cursor:pointer; }
+.detail-btn.outline { background:none; border:1px solid var(--border); color:var(--text2); }
+.detail-btn.solid { background:var(--ink); color:#fff; border:none; }
+
+/* Audio mini */
+.audio-mini { background:var(--bg); border-radius:8px; padding:9px 13px; display:flex; align-items:center; gap:10px; }
+.play-mini { width:26px; height:26px; background:var(--ink); border-radius:50%; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.play-mini svg { width:8px; height:8px; fill:#fff; margin-left:1px; }
+.audio-track { flex:1; height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
+.audio-fill { height:100%; background:var(--accent2); border-radius:2px; }
+.audio-time { font-size:11px; color:var(--text3); }
+
+/* ── MENU PAGE ── */
+.menu-layout { display:grid; grid-template-columns:220px 1fr; flex:1; }
+.cat-sidebar { background:var(--surface); border-right:1px solid var(--border); padding:14px 10px; display:flex; flex-direction:column; gap:2px; }
+.cat-sec-title { font-size:10px; font-weight:500; text-transform:uppercase; letter-spacing:.6px; color:var(--text3); padding:4px 10px; margin-bottom:4px; }
+.cat-item { display:flex; align-items:center; justify-content:space-between; padding:8px 12px; border-radius:8px; cursor:pointer; border:none; background:none; width:100%; font-family:var(--sans); transition:background .15s; }
+.cat-item:hover { background:var(--bg); }
+.cat-item.active { background:rgba(200,240,90,.15); }
+.cat-item-name { font-size:13px; color:var(--text); display:flex; align-items:center; gap:7px; }
+.cat-item.active .cat-item-name { font-weight:500; color:#4a6b00; }
+.cat-count { font-size:11px; color:var(--text3); background:var(--bg); padding:2px 7px; border-radius:100px; }
+.cat-item.active .cat-count { background:rgba(200,240,90,.3); color:#4a6b00; }
+.cat-add { display:flex; align-items:center; gap:8px; padding:8px 12px; border-radius:8px; cursor:pointer; font-size:13px; color:var(--text3); border:1px dashed var(--border); background:none; width:100%; font-family:var(--sans); margin-top:8px; transition:border-color .15s,color .15s; }
+.cat-add:hover { border-color:var(--accent2); color:var(--accent2); }
+.products-area { padding:18px 22px; overflow-y:auto; }
+.prod-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; }
+.prod-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; transition:box-shadow .2s; }
+.prod-card:hover { box-shadow:0 4px 14px rgba(0,0,0,.06); }
+.prod-card-img { height:110px; background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:36px; position:relative; }
+.prod-toggle-wrap { position:absolute; top:8px; right:8px; }
+.toggle { width:34px; height:19px; background:var(--border); border-radius:100px; cursor:pointer; position:relative; border:none; transition:background .2s; }
+.toggle.on { background:var(--accent2); }
+.toggle::after { content:''; position:absolute; top:2px; left:2px; width:15px; height:15px; background:#fff; border-radius:50%; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.15); }
+.toggle.on::after { transform:translateX(15px); }
+.prod-body { padding:11px 13px; }
+.prod-card-name { font-size:13px; font-weight:500; color:var(--text); margin-bottom:2px; }
+.prod-card-desc { font-size:11px; color:var(--text3); margin-bottom:9px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.prod-card-foot { display:flex; align-items:center; justify-content:space-between; }
+.prod-card-price { font-size:14px; font-weight:600; color:var(--text); }
+.prod-card-actions { display:flex; gap:5px; }
+.icon-btn { width:27px; height:27px; border-radius:6px; border:1px solid var(--border); background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:12px; transition:background .15s; }
+.icon-btn:hover { background:var(--bg); }
+.icon-btn.del:hover { background:var(--red-bg); border-color:var(--red); }
+.prod-add-card { border:1px dashed var(--border); border-radius:12px; display:flex; align-items:center; justify-content:center; min-height:180px; cursor:pointer; color:var(--text3); transition:border-color .15s,color .15s; flex-direction:column; gap:6px; font-size:13px; }
+.prod-add-card:hover { border-color:var(--accent2); color:var(--accent2); }
+
+/* Modal */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:300; display:none; align-items:center; justify-content:center; padding:20px; }
+.modal-overlay.open { display:flex; }
+.modal { background:var(--surface); border-radius:14px; width:100%; max-width:460px; overflow:hidden; animation:modalIn .2s ease; }
+@keyframes modalIn { from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)} }
+.modal-head { padding:16px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.modal-title { font-size:15px; font-weight:600; }
+.modal-body { padding:18px; display:flex; flex-direction:column; gap:13px; }
+.modal-foot { padding:13px 18px; border-top:1px solid var(--border); display:flex; gap:10px; justify-content:flex-end; }
+.btn-cancel { padding:8px 16px; border-radius:8px; font-family:var(--sans); font-size:13px; font-weight:500; cursor:pointer; border:1px solid var(--border); background:none; color:var(--text2); }
+.btn-save { padding:8px 16px; border-radius:8px; font-family:var(--sans); font-size:13px; font-weight:500; cursor:pointer; border:none; background:var(--ink); color:#fff; }
+.emoji-grid { display:flex; flex-wrap:wrap; gap:7px; }
+.emoji-opt { width:34px; height:34px; border-radius:7px; border:1px solid var(--border); background:none; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:border-color .15s; }
+.emoji-opt:hover,.emoji-opt.sel { border-color:var(--accent2); background:rgba(200,240,90,.1); }
+
+/* ── CLIENTES ── */
+.client-row { display:flex; align-items:center; gap:12px; padding:11px 18px; border-bottom:1px solid var(--border); cursor:pointer; }
+.client-row:last-child { border-bottom:none; }
+.client-row:hover { background:#fafafa; }
+.client-av { width:34px; height:34px; border-radius:50%; background:var(--ink); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; color:var(--accent); flex-shrink:0; }
+.client-name { font-size:13px; font-weight:500; color:var(--text); }
+.client-meta { font-size:11px; color:var(--text3); margin-top:2px; }
+.client-right { margin-left:auto; text-align:right; }
+.client-total { font-size:13px; font-weight:600; color:var(--text); }
+.client-orders { font-size:11px; color:var(--text3); margin-top:2px; }
+
+/* ── LLAMADAS ── */
+.call-row { display:flex; align-items:center; gap:12px; padding:11px 18px; border-bottom:1px solid var(--border); cursor:pointer; }
+.call-row:last-child { border-bottom:none; }
+.call-row:hover { background:#fafafa; }
+.call-icon { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+.call-phone { font-size:13px; font-weight:500; color:var(--text); }
+.call-meta { font-size:11px; color:var(--text3); margin-top:2px; }
+
+/* ── CONFIGURACION ── */
+.config-layout { display:grid; grid-template-columns:200px 1fr; gap:0; flex:1; }
+.config-nav { background:var(--surface); border-right:1px solid var(--border); padding:14px 10px; display:flex; flex-direction:column; gap:2px; }
+.config-nav-item { display:flex; align-items:center; gap:9px; padding:8px 12px; border-radius:8px; font-size:13px; color:var(--text2); cursor:pointer; border:none; background:none; width:100%; font-family:var(--sans); transition:background .15s; }
+.config-nav-item:hover { background:var(--bg); color:var(--text); }
+.config-nav-item.active { background:rgba(200,240,90,.15); color:#4a6b00; font-weight:500; }
+.config-content { padding:24px; overflow-y:auto; }
+.config-section { display:none; }
+.config-section.active { display:block; }
+.config-title { font-size:16px; font-weight:600; color:var(--text); margin-bottom:20px; }
+.config-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:14px; }
+.config-card-title { font-size:13px; font-weight:600; color:var(--text); margin-bottom:14px; }
+.config-save { padding:9px 20px; border-radius:8px; font-family:var(--sans); font-size:13px; font-weight:500; cursor:pointer; background:var(--ink); color:#fff; border:none; margin-top:6px; transition:background .15s; }
+.config-save:hover { background:#222; }
+.toggle-row { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border); }
+.toggle-row:last-child { border-bottom:none; }
+.toggle-row-text { font-size:13px; color:var(--text); }
+.toggle-row-sub { font-size:11px; color:var(--text3); margin-top:2px; }
+
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a href="#" class="logo">
-    <span class="logo-dot"></span>
-    Shark.AI
-  </a>
-  <div class="nav-right">
-    <a href="#como-funciona">Cómo funciona</a>
-    <a href="#industrias">Industrias</a>
-    <a href="#demo">Demo</a>
-    <a href="#" style="color:var(--chalk2)">Iniciar sesión</a>
-    <a href="#demo" class="btn-cta">Agenda demo</a>
+<!-- ═══ LOGIN ═══ -->
+<div class="page active" id="page-login">
+  <div class="auth-left">
+    <div class="auth-logo"><span class="auth-logo-dot"></span>Shark.AI</div>
+    <div class="auth-left-content">
+      <div class="auth-left-tag">Para restaurantes</div>
+      <h2>Tu recepcionista<br><em>nunca duerme.</em></h2>
+      <p>Accede a tu panel para ver pedidos en tiempo real y configurar a Shark para tu restaurante.</p>
+    </div>
+    <div class="auth-footer">© 2026 Renato Nicolas Olaechea Mendoza · Shark.AI</div>
   </div>
-</nav>
-
-<!-- HERO -->
-<div class="hero" id="inicio">
-  <span class="hero-iso left">S</span>
-  <span class="hero-iso right">S</span>
-
-  <h1>
-    El teléfono&nbsp; de tu restaurante&nbsp; <em>que siempre contesta.</em>
-  </h1>
-
-  <div class="hero-cta-wrap">
-    <a href="#demo" class="btn-cta" style="font-size:15px;padding:12px 28px">Agenda tu demo</a>
-  </div>
-
-  <!-- CALL CARD -->
-  <div class="call-card" id="demo">
-    <div class="call-top">
-      <span class="call-id">LLAMADA <strong>#4821</strong> · RESTAURANTE</span>
-      <div class="call-live"><div class="call-live-dot"></div>EN VIVO</div>
-    </div>
-
-    <div class="call-audio">
-      <button class="play-btn" onclick="togglePlay(this)">
-        <svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg>
-      </button>
-      <div class="audio-bar"><div class="audio-progress" id="audioProgress"></div></div>
-      <span class="audio-time" id="audioTime">00:00 / 00:38</span>
-    </div>
-
-    <div class="call-messages">
-      <div class="msg left">
-        <div>
-          <div class="msg-who">Cliente</div>
-          <div class="msg-bubble">Hola, quiero pedir 2 hamburguesas para recoger en 20 minutos.</div>
-        </div>
+  <div class="auth-right">
+    <div class="auth-form-box">
+      <div class="auth-form-title">Bienvenido de vuelta</div>
+      <div class="auth-form-sub">¿No tienes cuenta? <a style="cursor:pointer" onclick="showPage('page-registro')">Regístrate</a></div>
+      <div class="field">
+        <label>Correo electrónico</label>
+        <input type="email" id="l-email" placeholder="tu@restaurante.com">
       </div>
-      <div class="msg right">
-        <div>
-          <div class="msg-who" style="text-align:right">Shark</div>
-          <div class="msg-bubble">¡Claro! Van dos hamburguesas — ¿a nombre de quién las preparamos? Te mando el link de pago por WhatsApp.</div>
+      <div class="field" style="margin-top:12px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+          <label style="margin:0">Contraseña</label>
+          <a style="font-size:12px;color:#6b7280;cursor:pointer">¿Olvidaste tu contraseña?</a>
         </div>
+        <input type="password" id="l-pass" placeholder="••••••••">
       </div>
-    </div>
-
-    <div class="call-result">
-      ✓ Pedido tomado · 2 hamburguesas · Pickup 20 min · S/ 42
-    </div>
-
-    <div class="pos-badges">
-      <span class="pos-badge">POS</span>
-      <span class="pos-badge">Dashboard</span>
+      <div id="l-err" style="color:#dc2626;font-size:12px;margin-top:6px;display:none">Correo o contraseña incorrectos</div>
+      <button onclick="doLogin()" style="margin-top:14px;width:100%;padding:11px;background:#c8f05a;color:#0a0a0f;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;transition:background .2s">Iniciar sesión</button>
+      <div style="text-align:center;margin-top:16px;font-size:13px;color:#6b7280">
+        ¿Primera vez? <a style="color:#0a0a0f;font-weight:500;text-decoration:underline;cursor:pointer" onclick="showPage('page-registro')">Crea tu cuenta</a>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- CÓMO FUNCIONA -->
-<section class="section" id="como-funciona">
-  <div class="s-tag">Cómo funciona</div>
-  <h2>Contesta, toma el pedido<br>y lo <em>manda a tu cocina.</em></h2>
-  <p class="s-sub">Conectamos Shark con tu número existente en 48 horas. Tú sigues cocinando — ella contesta todo lo demás.</p>
-
-  <div class="steps reveal">
-    <div class="step">
-      <div class="step-n">01 · CONECTA</div>
-      <h3>Tu mismo número.</h3>
-      <p>Shark se enlaza con tu línea actual en minutos. El cliente marca igual que siempre — y contesta ella, al primer ring.</p>
+<!-- ═══ REGISTRO ═══ -->
+<div class="page" id="page-registro">
+  <div class="auth-left">
+    <div class="auth-logo"><span class="auth-logo-dot"></span>Shark.AI</div>
+    <div class="auth-left-content">
+      <div class="auth-left-tag">Crea tu cuenta</div>
+      <h2>En 5 minutos<br><em>Shark contesta.</em></h2>
+      <p>Configura tu restaurante y empieza a recibir pedidos automáticamente.</p>
     </div>
-    <div class="step">
-      <div class="step-n">02 · CONVERSA</div>
-      <h3>Voz humana, en peruano.</h3>
-      <p>Toma el pedido conversando — sin "presiona 1", sin robot. Entiende modismos, acentos. Pronto en mas idiomas.</p>
-    </div>
-    <div class="step">
-      <div class="step-n">03 · ENTREGA</div>
-      <h3>Directo a tu cocina.</h3>
-      <p>El pedido llega a tu POS o al dashboard de Shark en tiempo real. Pickup o delivery, ya queda listo para preparar.</p>
+    <div class="auth-footer">© 2026 Renato Nicolas Olaechea Mendoza · Shark.AI</div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-form-box">
+      <div class="auth-form-title">Crear cuenta</div>
+      <div class="auth-form-sub">¿Ya tienes cuenta? <a style="cursor:pointer" onclick="showPage('page-login')">Inicia sesión</a></div>
+      <div class="field"><label>Nombre completo</label><input type="text" id="r-nombre" placeholder="Renato Olaechea"></div>
+      <div class="field" style="margin-top:10px"><label>Correo</label><input type="email" id="r-email" placeholder="tu@restaurante.com"></div>
+      <div class="field" style="margin-top:10px"><label>Contraseña</label><input type="password" id="r-pass" placeholder="Mínimo 6 caracteres"></div>
+      <div class="field" style="margin-top:10px"><label>Nombre del restaurante</label><input type="text" id="r-negocio" placeholder="Ej: La Huerta de Ica"></div>
+      <div class="field" style="margin-top:10px"><label>Teléfono</label><input type="tel" id="r-tel" placeholder="+51 999 000 000"></div>
+      <div class="field" style="margin-top:10px"><label>Plan</label>
+        <select style="width:100%;padding:10px 12px;border:1px solid #e8e9ec;border-radius:8px;font-family:inherit;font-size:14px;outline:none;background:#fff">
+          <option>Starter — S/ 299/mes</option><option>Pro — S/ 499/mes</option><option>Business — S/ 799/mes</option>
+        </select>
+      </div>
+      <button onclick="doRegister()" style="margin-top:16px;width:100%;padding:11px;background:#c8f05a;color:#0a0a0f;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit">Crear mi cuenta</button>
+      <div style="text-align:center;margin-top:14px;font-size:13px;color:#6b7280">
+        ¿Ya tienes cuenta? <a style="color:#0a0a0f;font-weight:500;text-decoration:underline;cursor:pointer" onclick="showPage('page-login')">Inicia sesión</a>
+      </div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- INDUSTRIAS -->
-<div class="industries-wrap" id="industrias">
-  <div class="industries-inner">
-    <div class="s-tag">Nuestro enfoque</div>
-    <h2>El <em>call center virtual</em><br>del futuro.</h2>
-    <p class="s-sub" style="margin-bottom:48px">Hecho para restaurantes. Flexible para cualquier negocio que viva del teléfono.</p>
 
-    <div class="ind-grid">
 
-      <!-- FEATURED -->
-      <div class="ind-card wide reveal">
-        <div>
-          <div class="s-tag" style="margin-bottom:14px">● NUESTRO ENFOQUE</div>
-          <h3>Restaurantes.</h3>
-          <p>Porque un pedido perdido el viernes a las 8 pm no se recupera. Shark está diseñada con la hora pico en mente: responde múltiples llamadas simultáneas, conoce tu menú al derecho y al revés, y cobra al instante.</p>
-          <ul class="check-list">
-            <li>Pedidos de pickup y delivery</li>
-            <li>Menú completo en memoria — lee modificadores, alérgenos, precios</li>
-            <li>Confirmación por WhatsApp con tiempo estimado</li>
-            <li>FAQ 24/7 — horario, ubicación, dietéticos</li>
-          </ul>
+<!-- ══════════════════════════════════════════
+     LOGIN PAGE
+══════════════════════════════════════════ -->
+<div class="page auth-page active" id="page-login">
+  <div class="auth-left">
+    <div class="auth-logo"><span class="auth-logo-dot"></span>Shark.AI</div>
+    <div class="auth-left-content">
+      <div class="auth-left-tag">Para restaurantes</div>
+      <h2>Tu recepcionista<br><em>nunca duerme.</em></h2>
+      <p>Accede a tu panel para ver pedidos en tiempo real y configurar a Shark para tu restaurante.</p>
+    </div>
+    <div class="auth-footer">© 2026 Renato Nicolas Olaechea Mendoza · Shark.AI</div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-form-box">
+      <div class="auth-form-title">Bienvenido de vuelta</div>
+      <div class="auth-form-sub">¿No tienes cuenta? <a onclick="goTo('page-registro')">Regístrate</a></div>
+      <div class="field">
+        <label>Correo electrónico</label>
+        <input type="email" id="l-email" placeholder="tu@restaurante.com">
+        <div class="field-error" id="l-email-err">Ingresa un correo válido</div>
+      </div>
+      <div class="field">
+        <div class="field-row">
+          <label>Contraseña</label>
+          <span class="link-sm">¿Olvidaste tu contraseña?</span>
         </div>
+        <input type="password" id="l-pass" placeholder="••••••••">
+        <div class="field-error" id="l-pass-err">Mínimo 6 caracteres</div>
+      </div>
+      <button class="btn-primary" onclick="doLogin()">Iniciar sesión</button>
+      <div style="text-align:center;margin-top:20px;font-size:13px;color:var(--text2)">
+        ¿Primera vez aquí? <a style="color:var(--ink);font-weight:500;text-decoration:underline;cursor:pointer" onclick="goTo('page-registro')">Crea tu cuenta</a>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <div class="dash-mock">
-          <div class="dash-head">
-            <span>Vista del dashboard · Hoy</span>
+<!-- ══════════════════════════════════════════
+     REGISTRO PAGE
+══════════════════════════════════════════ -->
+<div class="page auth-page" id="page-registro">
+  <div class="auth-left">
+    <div class="auth-logo"><span class="auth-logo-dot"></span>Shark.AI</div>
+    <div class="auth-left-content">
+      <div class="auth-left-tag">Crea tu cuenta</div>
+      <h2>En 5 minutos<br><em>Shark contesta.</em></h2>
+      <p>Configura tu restaurante y empieza a recibir pedidos automáticamente.</p>
+      <div class="auth-steps">
+        <div class="auth-step"><div class="auth-step-num">1</div><div class="auth-step-text"><strong>Crea tu cuenta</strong> — correo y contraseña</div></div>
+        <div class="auth-step"><div class="auth-step-num">2</div><div class="auth-step-text"><strong>Datos de tu negocio</strong> — nombre, ciudad, teléfono</div></div>
+        <div class="auth-step"><div class="auth-step-num">3</div><div class="auth-step-text"><strong>Elige tu plan</strong></div></div>
+      </div>
+    </div>
+    <div class="auth-footer">© 2026 Renato Nicolas Olaechea Mendoza · Shark.AI</div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-form-box">
+      <div class="auth-form-title">Crear cuenta</div>
+      <div class="auth-form-sub">¿Ya tienes cuenta? <a onclick="goTo('page-login')">Inicia sesión</a></div>
+
+      <div class="step-ind">
+        <div class="step-ind-dot active" id="r-dot1">1</div>
+        <div class="step-ind-line" id="r-line1"></div>
+        <div class="step-ind-dot" id="r-dot2">2</div>
+        <div class="step-ind-line" id="r-line2"></div>
+        <div class="step-ind-dot" id="r-dot3">3</div>
+      </div>
+      <div class="step-labels">
+        <span class="active" id="r-lbl1">Tu cuenta</span>
+        <span id="r-lbl2">Tu negocio</span>
+        <span id="r-lbl3">Plan</span>
+      </div>
+
+      <!-- Step 1 -->
+      <div class="step-panel active" id="r-step1">
+        <div class="field"><label>Nombre completo</label><input type="text" id="r-nombre" placeholder="Renato Olaechea"></div>
+        <div class="field"><label>Correo</label><input type="email" id="r-email" placeholder="tu@restaurante.com"><div class="field-error" id="r-email-err">Correo inválido</div></div>
+        <div class="field">
+          <label>Contraseña</label>
+          <input type="password" id="r-pass" placeholder="Mínimo 8 caracteres" oninput="checkPass(this.value)">
+          <div class="pass-bars"><div class="pass-bar" id="pb1"></div><div class="pass-bar" id="pb2"></div><div class="pass-bar" id="pb3"></div><div class="pass-bar" id="pb4"></div></div>
+        </div>
+        <div class="field"><label>Confirmar contraseña</label><input type="password" id="r-pass2" placeholder="Repite tu contraseña"><div class="field-error" id="r-pass-err">Las contraseñas no coinciden</div></div>
+        <button class="btn-next" onclick="rStep2()">Continuar →</button>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-panel" id="r-step2">
+        <div class="field"><label>Nombre del restaurante</label><input type="text" id="r-negocio" placeholder="Ej: La Huerta de Ica"></div>
+        <div class="field-2col">
+          <div class="field"><label>Ciudad</label>
+            <select id="r-ciudad"><option value="">Selecciona...</option><option>Ica</option><option>Lima</option><option>Arequipa</option><option>Cusco</option><option>Trujillo</option><option>Piura</option><option>Otra</option></select>
           </div>
-          <div class="dash-head" style="border-top:none;padding-top:0">
-            <span style="color:var(--chalk2);font-size:12px">Pedidos activos</span>
+          <div class="field"><label>Tipo</label>
+            <select id="r-tipo"><option value="">Selecciona...</option><option>Restaurante</option><option>Pollería</option><option>Cevichería</option><option>Pizzería</option><option>Cafetería</option><option>Otro</option></select>
           </div>
-          <div class="dash-row">
-            <span>20:34 · Carlos M. · Pickup · S/ 42</span>
-            <span class="badge-live">LIVE</span>
-          </div>
-          <div class="dash-row">
-            <span>20:31 · L. García · Delivery · S/ 68</span>
-            <span class="badge-ok">✓</span>
-          </div>
-          <div class="dash-row">
-            <span>20:22 · +51 56·8821 · Pickup · S/ 29</span>
-            <span class="badge-ok">✓</span>
-          </div>
-          <div class="dash-row">
-            <span>20:18 · Jorge R. · Delivery · S/ 112</span>
-            <span class="badge-ok">✓</span>
-          </div>
-          <div class="dash-row">
-            <span>20:05 · Ana P. · Pickup · S/ 34</span>
-            <span class="badge-ok">✓</span>
-          </div>
+        </div>
+        <div class="field"><label>Teléfono</label><input type="tel" id="r-tel" placeholder="+51 999 000 000"><div class="field-hint">Este número recibirá las llamadas de Shark.AI</div></div>
+        <div class="field"><label>Dirección</label><input type="text" id="r-dir" placeholder="Av. Los Maestros 120, Ica"></div>
+        <div class="btn-row">
+          <button class="btn-back" onclick="rGoStep(1)">← Atrás</button>
+          <button class="btn-next" onclick="rStep3()">Continuar →</button>
         </div>
       </div>
 
-    </div>
+      <!-- Step 3 -->
+      <div class="step-panel" id="r-step3">
+        <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:12px">Elige tu plan</div>
+        <div class="plan-cards">
+          <div class="plan-card" onclick="selPlan(this)">
+            <div class="plan-radio"><div class="plan-radio-dot"></div></div>
+            <div><div class="plan-name">Starter</div><div class="plan-price">S/ 299 / mes</div><div class="plan-features">300 llamadas · 1 número · Dashboard básico</div></div>
+          </div>
+          <div class="plan-card selected" onclick="selPlan(this)">
+            <div class="plan-radio"><div class="plan-radio-dot"></div></div>
+            <div><div class="plan-name">Pro <span class="plan-badge">Más popular</span></div><div class="plan-price">S/ 499 / mes</div><div class="plan-features">Llamadas ilimitadas · 2 números · WhatsApp</div></div>
+          </div>
+          <div class="plan-card" onclick="selPlan(this)">
+            <div class="plan-radio"><div class="plan-radio-dot"></div></div>
+            <div><div class="plan-name">Business</div><div class="plan-price">S/ 799 / mes</div><div class="plan-features">Todo Pro + múltiples locales · API</div></div>
+          </div>
+        </div>
+        <div class="checkbox-wrap">
+          <input type="checkbox" id="r-terms">
+          <label for="r-terms">Acepto los <a>términos de uso</a> y la <a>política de privacidad</a></label>
+        </div>
+        <div class="btn-row">
+          <button class="btn-back" onclick="rGoStep(2)">← Atrás</button>
+          <button class="btn-next" onclick="doRegistro()">Crear mi cuenta</button>
+        </div>
+      </div>
 
-    <!-- Tags -->
-    <div class="ind-tags reveal">
-      <span class="ind-tag-label">También trabajamos con →</span>
-      <span class="ind-tag">Call centers</span>
-      <span class="ind-tag">Hoteles</span>
-      <span class="ind-tag">Oficinas</span>
-      <span class="ind-tag">Clínicas</span>
-      <span class="ind-tag">Talleres</span>
-      <span class="ind-tag">Barberías</span>
-      <span class="ind-tag accent">¿Tu industria? →</span>
-    </div>
-
-  </div>
-</div>
-
-<!-- TESTIMONIAL -->
-<div class="testi-wrap">
-  <div class="testi reveal">
-    <blockquote>
-      "Antes perdíamos más de 20 llamadas al día en hora pico. Ahora Shark contesta todas — <em>y salen más órdenes que nunca.</em>"
-    </blockquote>
-    <cite>Dueño de restaurante · Ica, Perú</cite>
-  </div>
-</div>
-
-<!-- CTA FINAL -->
-<div class="cta-wrap">
-  <div class="cta-box reveal">
-    <div class="s-tag" style="justify-content:center;margin-bottom:24px">Empieza hoy</div>
-    <h2>Deja de perder pedidos<br><em>por llamada.</em></h2>
-    <p>Agenda una demo de 15 minutos. Te mostramos exactamente cómo Shark contestaría las llamadas de tu restaurante.</p>
-    <div class="cta-btns">
-      <a href="mailto:ai@sharkai.pe" class="btn-cta" style="font-size:15px;padding:13px 30px">Agenda mi demo</a>
-      <a href="#demo" class="btn-ghost" style="font-size:14px;padding:13px 30px">Escucha una llamada</a>
-    </div>
-    <p class="cta-note">Sin tarjeta · Sin compromisos · Cancela cuando quieras</p>
-  </div>
-</div>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-grid">
-    <div class="footer-brand">
-      <a href="#" class="logo"><span class="logo-dot"></span>Shark.AI</a>
-      <p>Recepcionista virtual con IA para restaurantes. Contestamos cada llamada para que tú te enfoques en cocinar.</p>
-      <div class="footer-socials">
-        <a href="#" title="LinkedIn">in</a>
-        <a href="#" title="Instagram">ig</a>
+      <div class="success-msg" id="r-success">
+        <div class="success-icon">🦈</div>
+        <div style="font-size:18px;font-weight:600;margin-bottom:8px">¡Bienvenido a Shark.AI!</div>
+        <div style="font-size:14px;color:var(--text2)">Entrando al dashboard...</div>
       </div>
     </div>
-    <div class="footer-col">
-      <h4>Producto</h4>
-      <a href="#como-funciona">Cómo funciona</a>
-      <a href="#industrias">Industrias</a>
-      <a href="#demo">Demo</a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     APP SHELL
+══════════════════════════════════════════ -->
+<div class="page app-page" id="page-app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo" onclick="showSection('dashboard')">
+      <span class="sidebar-logo-dot"></span>Shark.AI
     </div>
-    <div class="footer-col">
-      <h4>Contacto</h4>
-      <a href="mailto:ai@sharkai.pe">ai@sharkai.pe</a>
-      <a href="tel:+51999000000">+51 999 000 000</a>
-      <a href="#">Ica, Perú</a>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" id="nav-dashboard" onclick="showSection('dashboard')"><span class="nav-icon">▦</span>Dashboard</button>
+      <button class="nav-item" id="nav-pedidos" onclick="showSection('pedidos')"><span class="nav-icon">🛒</span>Pedidos</button>
+      <button class="nav-item" id="nav-menu" onclick="showSection('menu')"><span class="nav-icon">☰</span>Menú</button>
+      <button class="nav-item" id="nav-clientes" onclick="showSection('clientes')"><span class="nav-icon">👥</span>Clientes</button>
+      <button class="nav-item" id="nav-llamadas" onclick="showSection('llamadas')"><span class="nav-icon">📞</span>Llamadas</button>
+      <button class="nav-item" id="nav-config" onclick="showSection('config')"><span class="nav-icon">⚙️</span>Configuración</button>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="user-chip">
+        <div class="user-av">RO</div>
+        <div><div class="user-name">Mi Restaurante</div><div class="user-plan">Plan Pro</div></div>
+      </div>
     </div>
-    <div class="footer-col">
-      <h4>Legal</h4>
-      <a href="#">Términos</a>
-      <a href="#">Privacidad</a>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- ── DASHBOARD ── -->
+    <div id="sec-dashboard">
+      <div class="topbar">
+        <span class="topbar-title">Dashboard</span>
+        <div class="topbar-right">
+          <span class="date-sel" style="padding:6px 12px;border-radius:7px;border:1px solid var(--border);font-size:13px;color:var(--text2);">📅 Hoy</span>
+          <button class="btn-sm">↻ Actualizar</button>
+          <button class="btn-sm btn-green">$ Cobrar</button>
+        </div>
+      </div>
+      <div class="content">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-label">🛒 Pedidos Hoy</div><div class="stat-value" id="d-pedidos">0</div><div class="stat-sub">pedidos registrados</div></div>
+          <div class="stat-card"><div class="stat-label">💰 Ingresos</div><div class="stat-value" id="d-ingresos">S/ 0</div><div class="stat-sub">ventas del día</div></div>
+          <div class="stat-card"><div class="stat-label">🎫 Ticket Promedio</div><div class="stat-value" id="d-ticket">S/ 0</div><div class="stat-sub">por pedido</div></div>
+          <div class="stat-card"><div class="stat-label">📦 Productos Vendidos</div><div class="stat-value">566</div><div class="stat-sub">unidades hoy</div></div>
+        </div>
+
+        <div class="grid-3-1">
+          <div class="card">
+            <div class="card-head">📈 Pedidos e Ingresos por Día
+              <div class="chart-legend">
+                <div class="leg-item"><div class="leg-dot" style="background:var(--ink)"></div>Pedidos</div>
+                <div class="leg-item"><div class="leg-dot" style="background:var(--accent2)"></div>Ingresos</div>
+              </div>
+            </div>
+            <div style="padding:16px">
+              <div class="bar-chart-wrap" id="barChart"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head">🕐 Horarios Pico</div>
+            <div style="padding:14px">
+              <div class="pico-grid">
+                <div class="pico-item"><div class="pico-time">12–14h</div><div class="pico-bar-wrap"><div class="pico-fill" style="width:95%"></div></div><div class="pico-count">38 ll.</div></div>
+                <div class="pico-item"><div class="pico-time">19–21h</div><div class="pico-bar-wrap"><div class="pico-fill" style="width:88%"></div></div><div class="pico-count">35 ll.</div></div>
+                <div class="pico-item"><div class="pico-time">20–22h</div><div class="pico-bar-wrap"><div class="pico-fill" style="width:75%"></div></div><div class="pico-count">30 ll.</div></div>
+                <div class="pico-item"><div class="pico-time">13–15h</div><div class="pico-bar-wrap"><div class="pico-fill" style="width:60%"></div></div><div class="pico-count">24 ll.</div></div>
+                <div class="pico-item"><div class="pico-time">08–10h</div><div class="pico-bar-wrap"><div class="pico-fill" style="width:40%"></div></div><div class="pico-count">16 ll.</div></div>
+                <div class="pico-item"><div class="pico-time">10–12h</div><div class="pico-bar-wrap"><div class="pico-fill" style="width:30%"></div></div><div class="pico-count">12 ll.</div></div>
+              </div>
+              <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
+                <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:10px">🔄 Pedidos por Tipo</div>
+                <div class="tipo-row"><span style="display:flex;align-items:center;gap:7px;font-size:13px;color:var(--text2)"><span class="tipo-dot" style="background:var(--ink)"></span>Pickup</span><span style="font-size:14px;font-weight:600">222</span></div>
+                <div class="tipo-row"><span style="display:flex;align-items:center;gap:7px;font-size:13px;color:var(--text2)"><span class="tipo-dot" style="background:var(--accent2)"></span>Delivery</span><span style="font-size:14px;font-weight:600">344</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="table-wrap">
+            <div class="card-head" style="padding:13px 18px">📞 Llamadas Recientes</div>
+            <table>
+              <thead><tr><th>Teléfono</th><th>Estado</th><th>Duración</th><th>Fecha</th></tr></thead>
+              <tbody>
+                <tr><td>+51 56 8821</td><td><span class="badge badge-live">● EN VIVO</span></td><td>—</td><td>Ahora</td></tr>
+                <tr><td>+51 940 640 221</td><td><span class="badge badge-atendida">✓ Atendida</span></td><td>0:38</td><td>Hoy, 20:34</td></tr>
+                <tr><td>+51 983 911 731</td><td><span class="badge badge-atendida">✓ Atendida</span></td><td>1:12</td><td>Hoy, 20:31</td></tr>
+                <tr><td>+51 912 940 180</td><td><span class="badge badge-perdida">✗ Perdida</span></td><td>—</td><td>Hoy, 20:18</td></tr>
+                <tr><td>+51 956 220 431</td><td><span class="badge badge-atendida">✓ Atendida</span></td><td>2:04</td><td>Hoy, 20:05</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-wrap">
+            <div class="card-head" style="padding:13px 18px">🍔 Productos Más Vendidos</div>
+            <table>
+              <thead><tr><th>Producto</th><th>Cant.</th><th>Ingresos</th></tr></thead>
+              <tbody>
+                <tr><td style="color:var(--text)">Hamburguesa clásica</td><td>191</td><td style="font-weight:600;color:var(--text)">S/ 2,865</td></tr>
+                <tr><td style="color:var(--text)">Lomo saltado</td><td>53</td><td style="font-weight:600;color:var(--text)">S/ 795</td></tr>
+                <tr><td style="color:var(--text)">Pollo a la brasa</td><td>47</td><td style="font-weight:600;color:var(--text)">S/ 800</td></tr>
+                <tr><td style="color:var(--text)">Pizza familiar</td><td>31</td><td style="font-weight:600;color:var(--text)">S/ 620</td></tr>
+                <tr><td style="color:var(--text)">Ceviche mixto</td><td>26</td><td style="font-weight:600;color:var(--text)">S/ 520</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PEDIDOS ── -->
+    <div id="sec-pedidos" style="display:none">
+      <div class="topbar">
+        <span class="topbar-title">Pedidos</span>
+        <div class="topbar-right">
+          <button class="btn-sm">↻ Actualizar</button>
+          <button class="btn-sm btn-ink" style="color:#fff">+ Nuevo pedido</button>
+        </div>
+      </div>
+      <div class="filters">
+        <div class="filter-tabs">
+          <button class="ftab active" onclick="ftab(this)">Todos</button>
+          <button class="ftab" onclick="ftab(this)">En vivo</button>
+          <button class="ftab" onclick="ftab(this)">Preparando</button>
+          <button class="ftab" onclick="ftab(this)">Listos</button>
+          <button class="ftab" onclick="ftab(this)">Entregados</button>
+        </div>
+        <div class="search-input"><span style="color:var(--text3)">🔍</span><input placeholder="Buscar cliente o #pedido..."></div>
+        <select class="date-sel"><option>Hoy</option><option>Ayer</option><option>Esta semana</option></select>
+      </div>
+      <div class="content">
+        <div class="mini-stats">
+          <div class="mini-stat"><div class="mini-stat-icon" style="background:rgba(200,240,90,.15)">🛒</div><div><div class="mini-stat-val">147</div><div class="mini-stat-lbl">Pedidos hoy</div></div></div>
+          <div class="mini-stat"><div class="mini-stat-icon" style="background:rgba(37,99,235,.1)">🚗</div><div><div class="mini-stat-val">89</div><div class="mini-stat-lbl">Delivery</div></div></div>
+          <div class="mini-stat"><div class="mini-stat-icon" style="background:rgba(22,163,74,.1)">🏃</div><div><div class="mini-stat-val">58</div><div class="mini-stat-lbl">Pickup</div></div></div>
+          <div class="mini-stat"><div class="mini-stat-icon" style="background:rgba(220,38,38,.08)">❌</div><div><div class="mini-stat-val">3</div><div class="mini-stat-lbl">Cancelados</div></div></div>
+        </div>
+        <div class="table-wrap">
+          <div class="card-head" style="padding:13px 18px">Lista de pedidos <span style="font-size:12px;color:var(--text3);font-weight:400;margin-left:8px">147 pedidos · Hoy</span></div>
+          <table>
+            <thead><tr><th>#Pedido</th><th>Cliente</th><th>Tipo</th><th>Productos</th><th>Estado</th><th>Total</th><th>Hora</th><th></th></tr></thead>
+            <tbody>
+              <tr onclick="openDetail('#4831','Carlos Mendoza','+51 940 640 221','Delivery','20:34','Av. Los Maestros 120','live','S/ 42.00')">
+                <td><strong style="color:var(--text)">#4831</strong></td>
+                <td><div style="color:var(--text);font-size:13px">Carlos Mendoza</div><div style="font-size:11px;color:var(--text3)">+51 940 640 221</div></td>
+                <td><span class="badge badge-delivery">Delivery</span></td>
+                <td style="color:var(--text)">2x Hamburguesa, 1x Gaseosa</td>
+                <td><span class="badge badge-live">● EN VIVO</span></td>
+                <td style="font-weight:600;color:var(--text)">S/ 42.00</td><td>20:34</td>
+                <td><button class="action-btn ok" onclick="event.stopPropagation()">Listo</button></td>
+              </tr>
+              <tr onclick="openDetail('#4830','Lucía García','+51 983 911 731','Pickup','20:31','Jr. Huancavelica 88','prep','S/ 28.00')">
+                <td><strong style="color:var(--text)">#4830</strong></td>
+                <td><div style="color:var(--text)">Lucía García</div><div style="font-size:11px;color:var(--text3)">+51 983 911 731</div></td>
+                <td><span class="badge badge-pickup">Pickup</span></td>
+                <td style="color:var(--text)">1x Lomo saltado, 1x Chicha</td>
+                <td><span class="badge badge-prep">Preparando</span></td>
+                <td style="font-weight:600;color:var(--text)">S/ 28.00</td><td>20:31</td>
+                <td><button class="action-btn ok" onclick="event.stopPropagation()">Listo</button></td>
+              </tr>
+              <tr onclick="openDetail('#4829','Jorge Quispe','+51 983 778 418','Delivery','20:22','Calle Lima 45','listo','S/ 56.00')">
+                <td><strong style="color:var(--text)">#4829</strong></td>
+                <td><div style="color:var(--text)">Jorge Quispe</div><div style="font-size:11px;color:var(--text3)">+51 983 778 418</div></td>
+                <td><span class="badge badge-delivery">Delivery</span></td>
+                <td style="color:var(--text)">1x Pollo a la brasa, 2x Papas</td>
+                <td><span class="badge badge-ok">Listo</span></td>
+                <td style="font-weight:600;color:var(--text)">S/ 56.00</td><td>20:22</td>
+                <td><button class="action-btn" onclick="event.stopPropagation()">Ver</button></td>
+              </tr>
+              <tr onclick="openDetail('#4828','Ana Torres','+51 912 940 180','Pickup','20:18','—','cancel','S/ 45.00')">
+                <td><strong style="color:var(--text)">#4828</strong></td>
+                <td><div style="color:var(--text)">Ana Torres</div><div style="font-size:11px;color:var(--text3)">+51 912 940 180</div></td>
+                <td><span class="badge badge-pickup">Pickup</span></td>
+                <td style="color:var(--text)">3x Pizza personal</td>
+                <td><span class="badge badge-cancel">Cancelado</span></td>
+                <td style="font-weight:600;color:var(--text)">S/ 45.00</td><td>20:18</td>
+                <td><button class="action-btn" onclick="event.stopPropagation()">Ver</button></td>
+              </tr>
+              <tr onclick="openDetail('#4827','Pedro Ccama','+51 956 220 431','Delivery','20:05','Av. Grau 312','done','S/ 68.00')">
+                <td><strong style="color:var(--text)">#4827</strong></td>
+                <td><div style="color:var(--text)">Pedro Ccama</div><div style="font-size:11px;color:var(--text3)">+51 956 220 431</div></td>
+                <td><span class="badge badge-delivery">Delivery</span></td>
+                <td style="color:var(--text)">2x Ceviche, 1x Cerveza</td>
+                <td><span class="badge badge-done">Entregado</span></td>
+                <td style="font-weight:600;color:var(--text)">S/ 68.00</td><td>20:05</td>
+                <td><button class="action-btn" onclick="event.stopPropagation()">Ver</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MENÚ ── -->
+    <div id="sec-menu" style="display:none;flex:1">
+      <div class="topbar">
+        <span class="topbar-title">Menú</span>
+        <div class="topbar-right">
+          <button class="btn-sm">Vista previa</button>
+          <button class="btn-sm btn-ink" style="color:#fff" onclick="openMenuModal()">+ Agregar plato</button>
+        </div>
+      </div>
+      <div class="menu-layout" style="height:calc(100vh - var(--topbar))">
+        <div class="cat-sidebar">
+          <div class="cat-sec-title">Categorías</div>
+          <button class="cat-item active" onclick="setCat(this,'Hamburguesas',6)"><span class="cat-item-name">🍔 Hamburguesas</span><span class="cat-count">6</span></button>
+          <button class="cat-item" onclick="setCat(this,'Pollos',4)"><span class="cat-item-name">🍗 Pollos</span><span class="cat-count">4</span></button>
+          <button class="cat-item" onclick="setCat(this,'Pizzas',5)"><span class="cat-item-name">🍕 Pizzas</span><span class="cat-count">5</span></button>
+          <button class="cat-item" onclick="setCat(this,'Carnes',3)"><span class="cat-item-name">🥩 Carnes</span><span class="cat-count">3</span></button>
+          <button class="cat-item" onclick="setCat(this,'Bebidas',8)"><span class="cat-item-name">🍹 Bebidas</span><span class="cat-count">8</span></button>
+          <button class="cat-item" onclick="setCat(this,'Postres',4)"><span class="cat-item-name">🍮 Postres</span><span class="cat-count">4</span></button>
+          <button class="cat-add">+ Nueva categoría</button>
+        </div>
+        <div class="products-area">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="font-size:15px;font-weight:600" id="cat-title">Hamburguesas</span>
+              <span style="font-size:12px;color:var(--text3)" id="cat-count">6 platos</span>
+            </div>
+            <div class="search-input"><span style="color:var(--text3)">🔍</span><input placeholder="Buscar plato..."></div>
+          </div>
+          <div class="prod-grid">
+            <div class="prod-card"><div class="prod-card-img">🍔<div class="prod-toggle-wrap"><button class="toggle on" onclick="this.classList.toggle('on')"></button></div></div><div class="prod-body"><div class="prod-card-name">Hamburguesa clásica</div><div class="prod-card-desc">Carne de res, lechuga, tomate, queso</div><div class="prod-card-foot"><span class="prod-card-price">S/ 15.00</span><div class="prod-card-actions"><button class="icon-btn" onclick="openMenuModal('Hamburguesa clásica','Carne de res, lechuga, tomate, queso','15.00','🍔')">✏️</button><button class="icon-btn del">🗑️</button></div></div></div></div>
+            <div class="prod-card"><div class="prod-card-img">🍔<div class="prod-toggle-wrap"><button class="toggle on" onclick="this.classList.toggle('on')"></button></div></div><div class="prod-body"><div class="prod-card-name">Hamburguesa doble</div><div class="prod-card-desc">Doble carne, bacon, queso cheddar</div><div class="prod-card-foot"><span class="prod-card-price">S/ 22.00</span><div class="prod-card-actions"><button class="icon-btn" onclick="openMenuModal('Hamburguesa doble','Doble carne, bacon, queso cheddar','22.00','🍔')">✏️</button><button class="icon-btn del">🗑️</button></div></div></div></div>
+            <div class="prod-card"><div class="prod-card-img" style="background:#fff5f5">🌶️<div class="prod-toggle-wrap"><button class="toggle on" onclick="this.classList.toggle('on')"></button></div></div><div class="prod-body"><div class="prod-card-name">Hamburguesa spicy</div><div class="prod-card-desc">Jalapeños, salsa picante, queso</div><div class="prod-card-foot"><span class="prod-card-price">S/ 18.00</span><div class="prod-card-actions"><button class="icon-btn" onclick="openMenuModal('Hamburguesa spicy','Jalapeños, salsa picante, queso','18.00','🌶️')">✏️</button><button class="icon-btn del">🗑️</button></div></div></div></div>
+            <div class="prod-card"><div class="prod-card-img" style="background:#f0fdf4">🥗<div class="prod-toggle-wrap"><button class="toggle" onclick="this.classList.toggle('on')"></button></div></div><div class="prod-body"><div class="prod-card-name">Hamburguesa vegana</div><div class="prod-card-desc">Medallón de garbanzo, aguacate</div><div class="prod-card-foot"><span class="prod-card-price">S/ 20.00</span><div class="prod-card-actions"><button class="icon-btn" onclick="openMenuModal('Hamburguesa vegana','Medallón de garbanzo, aguacate','20.00','🥗')">✏️</button><button class="icon-btn del">🗑️</button></div></div></div></div>
+            <div class="prod-card"><div class="prod-card-img">🍔<div class="prod-toggle-wrap"><button class="toggle on" onclick="this.classList.toggle('on')"></button></div></div><div class="prod-body"><div class="prod-card-name">Combo familiar</div><div class="prod-card-desc">4 hamburguesas + papas + gaseosas</div><div class="prod-card-foot"><span class="prod-card-price">S/ 65.00</span><div class="prod-card-actions"><button class="icon-btn" onclick="openMenuModal('Combo familiar','4 hamburguesas + papas + gaseosas','65.00','🍔')">✏️</button><button class="icon-btn del">🗑️</button></div></div></div></div>
+            <div class="prod-add-card" onclick="openMenuModal()"><div style="font-size:28px">+</div><div>Agregar plato</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CLIENTES ── -->
+    <div id="sec-clientes" style="display:none">
+      <div class="topbar">
+        <span class="topbar-title">Clientes</span>
+        <div class="topbar-right">
+          <div class="search-input"><span style="color:var(--text3)">🔍</span><input placeholder="Buscar cliente..."></div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
+          <div class="stat-card"><div class="stat-label">👥 Total clientes</div><div class="stat-value">284</div><div class="stat-sub">registrados</div></div>
+          <div class="stat-card"><div class="stat-label">🔁 Recurrentes</div><div class="stat-value">71%</div><div class="stat-sub">volvieron este mes</div></div>
+          <div class="stat-card"><div class="stat-label">⭐ Ticket promedio</div><div class="stat-value">S/ 42</div><div class="stat-sub">por cliente</div></div>
+        </div>
+        <div class="table-wrap">
+          <div class="card-head" style="padding:13px 18px">Lista de clientes</div>
+          <div class="client-row"><div class="client-av">CM</div><div><div class="client-name">Carlos Mendoza</div><div class="client-meta">+51 940 640 221 · Ica</div></div><div class="client-right"><div class="client-total">S/ 284</div><div class="client-orders">8 pedidos</div></div></div>
+          <div class="client-row"><div class="client-av">LG</div><div><div class="client-name">Lucía García</div><div class="client-meta">+51 983 911 731 · Ica</div></div><div class="client-right"><div class="client-total">S/ 196</div><div class="client-orders">6 pedidos</div></div></div>
+          <div class="client-row"><div class="client-av">JQ</div><div><div class="client-name">Jorge Quispe</div><div class="client-meta">+51 983 778 418 · Ica</div></div><div class="client-right"><div class="client-total">S/ 168</div><div class="client-orders">5 pedidos</div></div></div>
+          <div class="client-row"><div class="client-av">PC</div><div><div class="client-name">Pedro Ccama</div><div class="client-meta">+51 956 220 431 · Ica</div></div><div class="client-right"><div class="client-total">S/ 340</div><div class="client-orders">9 pedidos</div></div></div>
+          <div class="client-row"><div class="client-av">MH</div><div><div class="client-name">María Huanca</div><div class="client-meta">+51 934 112 890 · Ica</div></div><div class="client-right"><div class="client-total">S/ 132</div><div class="client-orders">4 pedidos</div></div></div>
+          <div class="client-row"><div class="client-av">LM</div><div><div class="client-name">Luis Mamani</div><div class="client-meta">+51 978 334 561 · Ica</div></div><div class="client-right"><div class="client-total">S/ 288</div><div class="client-orders">7 pedidos</div></div></div>
+          <div class="client-row"><div class="client-av">AT</div><div><div class="client-name">Ana Torres</div><div class="client-meta">+51 912 940 180 · Ica</div></div><div class="client-right"><div class="client-total">S/ 90</div><div class="client-orders">2 pedidos</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── LLAMADAS ── -->
+    <div id="sec-llamadas" style="display:none">
+      <div class="topbar">
+        <span class="topbar-title">Llamadas</span>
+        <div class="topbar-right">
+          <select class="date-sel"><option>Hoy</option><option>Ayer</option><option>Esta semana</option></select>
+        </div>
+      </div>
+      <div class="filters">
+        <div class="filter-tabs">
+          <button class="ftab active" onclick="ftab(this)">Todas</button>
+          <button class="ftab" onclick="ftab(this)">Atendidas</button>
+          <button class="ftab" onclick="ftab(this)">Perdidas</button>
+          <button class="ftab" onclick="ftab(this)">En vivo</button>
+        </div>
+      </div>
+      <div class="content">
+        <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
+          <div class="stat-card"><div class="stat-label">📞 Total llamadas</div><div class="stat-value">147</div><div class="stat-sub">hoy</div></div>
+          <div class="stat-card"><div class="stat-label">✅ Atendidas</div><div class="stat-value">141</div><div class="stat-sub">96% tasa</div></div>
+          <div class="stat-card"><div class="stat-label">❌ Perdidas</div><div class="stat-value">6</div><div class="stat-sub">4% de llamadas</div></div>
+          <div class="stat-card"><div class="stat-label">⏱️ Duración prom.</div><div class="stat-value">1:24</div><div class="stat-sub">minutos</div></div>
+        </div>
+        <div class="table-wrap">
+          <div class="card-head" style="padding:13px 18px">Historial de llamadas</div>
+          <table>
+            <thead><tr><th>Teléfono</th><th>Estado</th><th>Duración</th><th>Resultado</th><th>Fecha</th><th></th></tr></thead>
+            <tbody>
+              <tr><td>+51 56 8821</td><td><span class="badge badge-live">● EN VIVO</span></td><td>—</td><td style="color:var(--text)">Tomando pedido</td><td>Ahora</td><td><button class="action-btn">Escuchar</button></td></tr>
+              <tr><td>+51 940 640 221</td><td><span class="badge badge-atendida">✓ Atendida</span></td><td>0:38</td><td style="color:var(--text)">Pedido #4831</td><td>20:34</td><td><button class="action-btn">Escuchar</button></td></tr>
+              <tr><td>+51 983 911 731</td><td><span class="badge badge-atendida">✓ Atendida</span></td><td>1:12</td><td style="color:var(--text)">Pedido #4830</td><td>20:31</td><td><button class="action-btn">Escuchar</button></td></tr>
+              <tr><td>+51 983 778 418</td><td><span class="badge badge-atendida">✓ Atendida</span></td><td>0:56</td><td style="color:var(--text)">Pedido #4829</td><td>20:22</td><td><button class="action-btn">Escuchar</button></td></tr>
+              <tr><td>+51 912 940 180</td><td><span class="badge badge-perdida">✗ Perdida</span></td><td>—</td><td style="color:var(--text3)">Sin respuesta</td><td>20:18</td><td><button class="action-btn">Ver</button></td></tr>
+              <tr><td>+51 956 220 431</td><td><span class="badge badge-atendida">✓ Atendida</span></td><td>2:04</td><td style="color:var(--text)">Pedido #4827</td><td>20:05</td><td><button class="action-btn">Escuchar</button></td></tr>
+              <tr><td>+51 934 112 890</td><td><span class="badge badge-atendida">✓ Atendida</span></td><td>0:48</td><td style="color:var(--text)">Pedido #4826</td><td>19:58</td><td><button class="action-btn">Escuchar</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CONFIGURACION ── -->
+    <div id="sec-config" style="display:none;flex:1">
+      <div class="topbar"><span class="topbar-title">Configuración</span></div>
+      <div class="config-layout" style="height:calc(100vh - var(--topbar))">
+        <div class="config-nav">
+          <button class="config-nav-item active" onclick="setConfigTab(this,'cfg-negocio')">🏪 Mi negocio</button>
+          <button class="config-nav-item" onclick="setConfigTab(this,'cfg-shark')">🦈 Shark.AI</button>
+          <button class="config-nav-item" onclick="setConfigTab(this,'cfg-horarios')">🕐 Horarios</button>
+          <button class="config-nav-item" onclick="setConfigTab(this,'cfg-notif')">🔔 Notificaciones</button>
+          <button class="config-nav-item" onclick="setConfigTab(this,'cfg-plan')">💳 Plan y facturación</button>
+        </div>
+        <div class="config-content">
+
+          <div class="config-section active" id="cfg-negocio">
+            <div class="config-title">Mi negocio</div>
+            <div class="config-card">
+              <div class="config-card-title">Información del restaurante</div>
+              <div class="field"><label>Nombre del restaurante</label><input type="text" value="Mi Restaurante"></div>
+              <div class="field-2col">
+                <div class="field"><label>Ciudad</label><select><option>Ica</option><option>Lima</option></select></div>
+                <div class="field"><label>Tipo</label><select><option>Restaurante</option><option>Pollería</option></select></div>
+              </div>
+              <div class="field"><label>Dirección</label><input type="text" value="Av. Los Maestros 120, Ica"></div>
+              <div class="field"><label>Teléfono principal</label><input type="tel" value="+51 999 000 000"></div>
+              <button class="config-save">Guardar cambios</button>
+            </div>
+          </div>
+
+          <div class="config-section" id="cfg-shark">
+            <div class="config-title">Configurar Shark.AI</div>
+            <div class="config-card">
+              <div class="config-card-title">Voz y personalidad</div>
+              <div class="field"><label>Nombre del asistente</label><input type="text" value="Shark" placeholder="Ej: Sofia, Marina..."></div>
+              <div class="field"><label>Saludo inicial</label><textarea style="min-height:80px">Hola, gracias por llamar a nuestro restaurante. ¿En qué le puedo ayudar?</textarea></div>
+              <div class="field"><label>Voz</label><select><option>Español peruano - Femenina</option><option>Español peruano - Masculina</option><option>Español neutro - Femenina</option></select></div>
+              <button class="config-save">Guardar</button>
+            </div>
+            <div class="config-card">
+              <div class="config-card-title">Funciones activas</div>
+              <div class="toggle-row"><div><div class="toggle-row-text">Tomar pedidos de delivery</div><div class="toggle-row-sub">Shark toma pedidos y los envía al dashboard</div></div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
+              <div class="toggle-row"><div><div class="toggle-row-text">Tomar pedidos de pickup</div><div class="toggle-row-sub">Pedidos para recoger en tienda</div></div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
+              <div class="toggle-row"><div><div class="toggle-row-text">Responder preguntas del menú</div><div class="toggle-row-sub">Precios, ingredientes, disponibilidad</div></div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
+              <div class="toggle-row"><div><div class="toggle-row-text">Confirmación por WhatsApp</div><div class="toggle-row-sub">Enviar confirmación al cliente tras cada pedido</div></div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
+            </div>
+          </div>
+
+          <div class="config-section" id="cfg-horarios">
+            <div class="config-title">Horarios de atención</div>
+            <div class="config-card">
+              <div class="config-card-title">Horario del restaurante</div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                ${['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'].map((d,i)=>`
+                <div style="display:flex;align-items:center;gap:12px">
+                  <span style="width:90px;font-size:13px;color:var(--text2)">${d}</span>
+                  <input type="time" value="${i<5?'09:00':'10:00'}" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-family:var(--sans);font-size:13px;color:var(--text);background:var(--surface);outline:none">
+                  <span style="font-size:13px;color:var(--text3)">a</span>
+                  <input type="time" value="${i<6?'22:00':'20:00'}" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-family:var(--sans);font-size:13px;color:var(--text);background:var(--surface);outline:none">
+                  <button class="toggle ${i<6?'on':''}" onclick="this.classList.toggle('on')" style="flex-shrink:0"></button>
+                </div>`).join('')}
+              </div>
+              <button class="config-save" style="margin-top:16px">Guardar horarios</button>
+            </div>
+          </div>
+
+          <div class="config-section" id="cfg-notif">
+            <div class="config-title">Notificaciones</div>
+            <div class="config-card">
+              <div class="config-card-title">WhatsApp de notificaciones</div>
+              <div class="field"><label>Número para recibir alertas</label><input type="tel" value="+51 999 000 000"><div class="field-hint">Aquí recibirás cada pedido nuevo como mensaje de WhatsApp</div></div>
+              <button class="config-save">Guardar</button>
+            </div>
+            <div class="config-card">
+              <div class="config-card-title">Alertas activas</div>
+              <div class="toggle-row"><div><div class="toggle-row-text">Nuevo pedido</div></div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
+              <div class="toggle-row"><div><div class="toggle-row-text">Llamada perdida</div></div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
+              <div class="toggle-row"><div><div class="toggle-row-text">Resumen diario</div></div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
+            </div>
+          </div>
+
+          <div class="config-section" id="cfg-plan">
+            <div class="config-title">Plan y facturación</div>
+            <div class="config-card">
+              <div class="config-card-title">Plan actual</div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:rgba(200,240,90,.08);border:1px solid rgba(200,240,90,.25);border-radius:10px;margin-bottom:14px">
+                <div><div style="font-size:15px;font-weight:600;color:var(--text)">Plan Pro</div><div style="font-size:13px;color:var(--text2);margin-top:3px">Llamadas ilimitadas · 2 números · WhatsApp</div></div>
+                <div style="font-size:18px;font-weight:600;color:var(--text)">S/ 499<span style="font-size:12px;font-weight:400;color:var(--text2)">/mes</span></div>
+              </div>
+              <button class="config-save">Cambiar plan</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ORDER DETAIL OVERLAY -->
+<div class="overlay" id="detailOverlay" onclick="closeDetail(event)">
+  <div class="detail-panel" onclick="event.stopPropagation()">
+    <div class="detail-head">
+      <span class="detail-title" id="d-title">Pedido</span>
+      <button class="close-btn" onclick="closeDetail()">✕</button>
+    </div>
+    <div class="detail-body">
+      <div class="detail-sec">
+        <div class="detail-sec-title">Llamada grabada</div>
+        <div class="audio-mini">
+          <button class="play-mini"><svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg></button>
+          <div class="audio-track"><div class="audio-fill" style="width:62%"></div></div>
+          <span class="audio-time">00:38</span>
+        </div>
+      </div>
+      <div class="detail-sec">
+        <div class="detail-sec-title">Información</div>
+        <div class="detail-row"><span class="detail-row-lbl">Estado</span><span id="d-badge"></span></div>
+        <div class="detail-row"><span class="detail-row-lbl">Tipo</span><span class="detail-row-val" id="d-tipo"></span></div>
+        <div class="detail-row"><span class="detail-row-lbl">Hora</span><span class="detail-row-val" id="d-hora"></span></div>
+        <div class="detail-row"><span class="detail-row-lbl">Dirección</span><span class="detail-row-val" id="d-dir"></span></div>
+      </div>
+      <div class="detail-sec">
+        <div class="detail-sec-title">Cliente</div>
+        <div class="detail-row"><span class="detail-row-lbl">Nombre</span><span class="detail-row-val" id="d-name"></span></div>
+        <div class="detail-row"><span class="detail-row-lbl">Teléfono</span><span class="detail-row-val" id="d-phone"></span></div>
+      </div>
+      <div class="detail-sec">
+        <div class="detail-sec-title">Productos</div>
+        <div class="prod-item"><div><div class="prod-item-name">Hamburguesa clásica</div><div class="prod-item-qty">x2 · S/ 15.00 c/u</div></div><span class="prod-item-price">S/ 30.00</span></div>
+        <div class="prod-item"><div><div class="prod-item-name">Gaseosa personal</div><div class="prod-item-qty">x1 · S/ 5.00 c/u</div></div><span class="prod-item-price">S/ 5.00</span></div>
+        <div class="prod-item"><div><div class="prod-item-name">Delivery</div><div class="prod-item-qty">Costo de envío</div></div><span class="prod-item-price">S/ 7.00</span></div>
+        <div class="total-row"><span>Total</span><span id="d-total"></span></div>
+      </div>
+    </div>
+    <div class="detail-foot">
+      <button class="detail-btn outline" onclick="closeDetail()">Cerrar</button>
+      <button class="detail-btn solid">Marcar como listo ✓</button>
     </div>
   </div>
-  <div class="footer-bottom">
-    <span>© 2026 Renato Nicolas Olaechea Mendoza · Shark.AI</span>
-    <span>Hecho con ♥ en Perú 🇵🇪</span>
+</div>
+
+<!-- MENU MODAL -->
+<div class="modal-overlay" id="menuModal" onclick="closeMenuModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <span class="modal-title" id="modal-title">Agregar plato</span>
+      <button class="close-btn" onclick="closeMenuModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div style="font-size:12px;font-weight:500;color:var(--text2);margin-bottom:6px">Ícono</div>
+        <div class="emoji-grid">
+          <button class="emoji-opt sel" onclick="selEmoji(this)">🍔</button>
+          <button class="emoji-opt" onclick="selEmoji(this)">🍕</button>
+          <button class="emoji-opt" onclick="selEmoji(this)">🍗</button>
+          <button class="emoji-opt" onclick="selEmoji(this)">🥩</button>
+          <button class="emoji-opt" onclick="selEmoji(this)">🌮</button>
+          <button class="emoji-opt" onclick="selEmoji(this)">🥗</button>
+          <button class="emoji-opt" onclick="selEmoji(this)">🍹</button>
+          <button class="emoji-opt" onclick="selEmoji(this)">🍮</button>
+          <button class="emoji-opt" onclick="selEmoji(this)">🌶️</button>
+          <button class="emoji-opt" onclick="selEmoji(this)">🥤</button>
+        </div>
+      </div>
+      <div class="field"><label>Nombre del plato</label><input type="text" id="m-nombre" placeholder="Ej: Hamburguesa clásica"></div>
+      <div class="field"><label>Descripción</label><textarea id="m-desc" placeholder="Ingredientes o descripción..."></textarea></div>
+      <div class="field-2col">
+        <div class="field"><label>Precio (S/)</label><input type="number" id="m-precio" placeholder="0.00" step="0.5" min="0"></div>
+        <div class="field"><label>Categoría</label><select id="m-cat"><option>Hamburguesas</option><option>Pollos</option><option>Pizzas</option><option>Carnes</option><option>Bebidas</option><option>Postres</option></select></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeMenuModal()">Cancelar</button>
+      <button class="btn-save">Guardar plato</button>
+    </div>
   </div>
-</footer>
+</div>
+
+
 
 <script>
-  // Scroll reveal
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+// ══ NAVIGATION ══
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(function(p) {
+    p.classList.remove('active');
+  });
+  var el = document.getElementById(id);
+  if (el) el.classList.add('active');
+}
 
-  // Fake audio player
-  let playing = false, progress = 45, timer = null;
-  const totalSecs = 38;
-  let currentSecs = Math.round(totalSecs * 0.45);
-
-  function fmt(s) { return `0${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`; }
-
-  function togglePlay(btn) {
-    playing = !playing;
-    btn.innerHTML = playing
-      ? `<svg viewBox="0 0 10 10" width="10" height="10" fill="#0a0a0f"><rect x="1.5" y="1" width="2.5" height="8"/><rect x="6" y="1" width="2.5" height="8"/></svg>`
-      : `<svg viewBox="0 0 10 10" width="10" height="10" fill="#0a0a0f"><polygon points="2,1 9,5 2,9"/></svg>`;
-    if (playing) {
-      timer = setInterval(() => {
-        currentSecs = Math.min(currentSecs + 1, totalSecs);
-        progress = (currentSecs / totalSecs) * 100;
-        document.getElementById('audioProgress').style.width = progress + '%';
-        document.getElementById('audioTime').textContent = `${fmt(currentSecs)} / ${fmt(totalSecs)}`;
-        if (currentSecs >= totalSecs) { clearInterval(timer); playing = false;
-          btn.innerHTML = `<svg viewBox="0 0 10 10" width="10" height="10" fill="#0a0a0f"><polygon points="2,1 9,5 2,9"/></svg>`;
-        }
-      }, 1000);
-    } else { clearInterval(timer); }
+// ══ LOGIN ══
+function doLogin() {
+  var email = document.getElementById('l-email').value.trim();
+  var pass  = document.getElementById('l-pass').value;
+  document.getElementById('l-err').style.display = 'none';
+  if (!email || pass.length < 6) {
+    document.getElementById('l-err').style.display = 'block';
+    return;
   }
-</script>
+  if (email.toLowerCase() === 'ai@sharkai.pe') {
+    showPage('page-admin');
+    return;
+  }
+  showPage('page-app');
+  setTimeout(function() {
+    showSection('dashboard');
+    buildChart();
+    animateStats();
+  }, 150);
+}
 
+// ══ REGISTRO ══
+function doRegister() {
+  var nombre  = document.getElementById('r-nombre').value.trim();
+  var email   = document.getElementById('r-email').value.trim();
+  var pass    = document.getElementById('r-pass').value;
+  var negocio = document.getElementById('r-negocio').value.trim();
+  if (!nombre || !email || pass.length < 6 || !negocio) {
+    alert('Completa todos los campos (contraseña mínimo 6 caracteres)');
+    return;
+  }
+  showPage('page-app');
+  setTimeout(function() {
+    showSection('dashboard');
+    buildChart();
+    animateStats();
+  }, 150);
+}
+
+// ══ SECTION NAV ══
+function showSection(name) {
+  ['dashboard','pedidos','menu','clientes','llamadas','config'].forEach(function(s) {
+    var sec = document.getElementById('sec-'+s);
+    var nav = document.getElementById('nav-'+s);
+    if (sec) sec.style.display = 'none';
+    if (nav) nav.classList.remove('active');
+  });
+  var target = document.getElementById('sec-'+name);
+  if (target) target.style.display = (name==='menu'||name==='config') ? 'flex' : 'block';
+  var navBtn = document.getElementById('nav-'+name);
+  if (navBtn) navBtn.classList.add('active');
+  var titles = {dashboard:'Dashboard',pedidos:'Pedidos',menu:'Menú',clientes:'Clientes',llamadas:'Llamadas',config:'Configuración'};
+  var tb = document.getElementById('topbar-title');
+  if (tb) tb.textContent = titles[name] || name;
+  if (name === 'dashboard') { buildChart(); }
+}
+
+
+// ── NAVIGATION ──
+
+
+
+
+
+
+function rGoStep(n) {
+  document.getElementById('r-step'+regStep).classList.remove('active');
+  document.getElementById('r-step'+n).classList.add('active');
+  for (let i=1;i<=3;i++) {
+    const dot = document.getElementById('r-dot'+i);
+    const lbl = document.getElementById('r-lbl'+i);
+    dot.classList.remove('active','done');
+    lbl.classList.remove('active');
+    if (i<n){ dot.classList.add('done'); dot.textContent='✓'; }
+    else if (i===n){ dot.classList.add('active'); dot.textContent=i; lbl.classList.add('active'); }
+    else dot.textContent=i;
+  }
+  for (let i=1;i<=2;i++) document.getElementById('r-line'+i).classList.toggle('done',i<n);
+  regStep=n;
+}
+function rStep2() {
+  const e=document.getElementById('r-email').value;
+  const p=document.getElementById('r-pass').value;
+  const p2=document.getElementById('r-pass2').value;
+  let ok=true;
+  document.getElementById('r-email-err').style.display='none';
+  document.getElementById('r-pass-err').style.display='none';
+  if (!e||!/\S+@\S+\.\S+/.test(e)){document.getElementById('r-email-err').style.display='block';ok=false;}
+  if (p!==p2||p.length<8){document.getElementById('r-pass-err').style.display='block';ok=false;}
+  if(ok)rGoStep(2);
+}
+function rStep3() {
+  const neg=document.getElementById('r-negocio').value;
+  const tel=document.getElementById('r-tel').value;
+  if(!neg||!tel){alert('Completa los campos requeridos');return;}
+  rGoStep(3);
+}
+function doRegistro() {
+  if(!document.getElementById('r-terms').checked){alert('Acepta los términos');return;}
+  document.getElementById('r-step3').style.display='none';
+  document.getElementById('r-success').style.display='block';
+  setTimeout(()=>{goTo('page-app');buildChart();animateStats();},1800);
+}
+function selPlan(card) {
+  document.querySelectorAll('.plan-card').forEach(c=>c.classList.remove('selected'));
+  card.classList.add('selected');
+}
+function checkPass(v) {
+  const colors=['#ef4444','#f97316','#eab308','#a8d43a'];
+  let s=0;
+  if(v.length>=8)s++;if(/[A-Z]/.test(v))s++;if(/[0-9]/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;
+  for(let i=1;i<=4;i++) document.getElementById('pb'+i).style.background = i<=s ? colors[s-1] : 'var(--border)';
+}
+
+// ── CHART ──
+function buildChart() {
+  const el = document.getElementById('barChart');
+  if (!el || el.children.length > 0) return;
+  const days=['L','M','M','J','V','S','D'];
+  const orders=[18,24,21,32,45,58,38];
+  const income=[8,11,9,14,20,26,17];
+  const max=Math.max(...orders,...income);
+  days.forEach((d,i)=>{
+    const col=document.createElement('div'); col.className='bar-col';
+    const pair=document.createElement('div'); pair.className='bar-pair';
+    const b1=document.createElement('div'); b1.className='bar b1';
+    b1.style.height=Math.round((orders[i]/max)*82)+'px';
+    const b2=document.createElement('div'); b2.className='bar b2';
+    b2.style.height=Math.round((income[i]/max)*82)+'px';
+    pair.append(b1,b2);
+    const lbl=document.createElement('div'); lbl.className='bar-lbl'; lbl.textContent=d;
+    col.append(pair,lbl); el.appendChild(col);
+  });
+}
+
+function animateStats() {
+  function count(el,target,pre='',suf='',dec=0){
+    let v=0; const s=target/(1200/16);
+    const t=setInterval(()=>{v=Math.min(v+s,target);el.textContent=pre+v.toFixed(dec)+suf;if(v>=target)clearInterval(t);},16);
+  }
+  count(document.getElementById('d-pedidos'),147);
+  count(document.getElementById('d-ingresos'),2208,'S/ ','',0);
+  count(document.getElementById('d-ticket'),42,'S/ ','',0);
+}
+
+// ── FILTERS ──
+function ftab(el) {
+  el.closest('.filter-tabs').querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── ORDER DETAIL ──
+function openDetail(id,name,phone,tipo,hora,dir,status,total) {
+  document.getElementById('d-title').textContent='Pedido '+id;
+  document.getElementById('d-name').textContent=name;
+  document.getElementById('d-phone').textContent=phone;
+  document.getElementById('d-tipo').textContent=tipo;
+  document.getElementById('d-hora').textContent=hora;
+  document.getElementById('d-dir').textContent=dir;
+  document.getElementById('d-total').textContent=total;
+  const badges={live:'<span class="badge badge-live">● EN VIVO</span>',prep:'<span class="badge badge-prep">Preparando</span>',listo:'<span class="badge badge-ok">Listo</span>',cancel:'<span class="badge badge-cancel">Cancelado</span>',done:'<span class="badge badge-done">Entregado</span>'};
+  document.getElementById('d-badge').innerHTML=badges[status]||'';
+  document.getElementById('detailOverlay').classList.add('open');
+}
+function closeDetail(e) {
+  if(!e||e.target===document.getElementById('detailOverlay'))
+    document.getElementById('detailOverlay').classList.remove('open');
+}
+
+// ── MENU ──
+function setCat(el,name,count) {
+  document.querySelectorAll('.cat-item').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('cat-title').textContent=name;
+  document.getElementById('cat-count').textContent=count+' platos';
+}
+function openMenuModal(nombre='',desc='',precio='',emoji='🍔') {
+  document.getElementById('modal-title').textContent=nombre?'Editar plato':'Agregar plato';
+  document.getElementById('m-nombre').value=nombre;
+  document.getElementById('m-desc').value=desc;
+  document.getElementById('m-precio').value=precio;
+  document.querySelectorAll('.emoji-opt').forEach(e=>e.classList.toggle('sel',e.textContent===emoji));
+  document.getElementById('menuModal').classList.add('open');
+}
+function closeMenuModal(e) {
+  if(!e||e.target===document.getElementById('menuModal'))
+    document.getElementById('menuModal').classList.remove('open');
+}
+function selEmoji(el) {
+  document.querySelectorAll('.emoji-opt').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+// ── CONFIG ──
+function setConfigTab(el,sectionId) {
+  document.querySelectorAll('.config-nav-item').forEach(i=>i.classList.remove('active'));
+  document.querySelectorAll('.config-section').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(sectionId).classList.add('active');
+}
+
+// Init
+buildChart();
+
+</script>
 </body>
 </html>
