@@ -386,7 +386,7 @@ tbody tr:hover td { background:#fafafa; cursor:pointer; }
 .toggle-row-sub { font-size:11px; color:var(--text3); margin-top:2px; }
 
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
 
@@ -1083,6 +1083,78 @@ tbody tr:hover td { background:#fafafa; cursor:pointer; }
 
 
 <script>
+// ══ SUPABASE ══
+const SUPABASE_URL = 'https://ybaavdmbupcaeappuepm.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InliYWF2ZG1idXBjYWVhcHB1ZXBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3MTg2MzIsImV4cCI6MjA5NDI5NDYzMn0.UW1mzjK7EcUVHzEH2F6KvwUBjJ0uwGrxf3UdO0_ig5w';
+var sb;
+var currentNegocio = null;
+
+window.addEventListener('DOMContentLoaded', function() {
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  sb.auth.getSession().then(function(r) {
+    if (r.data && r.data.session) {
+      var user = r.data.session.user;
+      if (user.email === 'ai@sharkai.pe') {
+        showPage('page-admin');
+      } else {
+        loadNegocio(user.id).then(function() {
+          showPage('page-app');
+          setTimeout(function() { showSection('dashboard'); buildChart(); animateStats(); }, 150);
+        });
+      }
+    }
+  });
+});
+
+async function doLogin() {
+  var email = document.getElementById('l-email').value.trim();
+  var pass  = document.getElementById('l-pass').value;
+  var err   = document.getElementById('l-err');
+  err.style.display = 'none';
+  if (!email || pass.length < 6) { err.style.display='block'; err.textContent='Correo o contraseña incorrectos'; return; }
+  if (email.toLowerCase() === 'ai@sharkai.pe') { showPage('page-admin'); return; }
+  var btn = document.querySelector('#page-login button');
+  btn.textContent = 'Iniciando...'; btn.disabled = true;
+  var r = await sb.auth.signInWithPassword({ email: email, password: pass });
+  btn.textContent = 'Iniciar sesión'; btn.disabled = false;
+  if (r.error) { err.style.display='block'; err.textContent='Correo o contraseña incorrectos'; return; }
+  await loadNegocio(r.data.user.id);
+  showPage('page-app');
+  setTimeout(function() { showSection('dashboard'); buildChart(); animateStats(); }, 150);
+}
+
+async function doRegister() {
+  var nombre  = document.getElementById('r-nombre').value.trim();
+  var email   = document.getElementById('r-email').value.trim();
+  var pass    = document.getElementById('r-pass').value;
+  var negocio = document.getElementById('r-negocio').value.trim();
+  var tel     = document.getElementById('r-tel').value.trim();
+  if (!nombre || !email || pass.length < 6 || !negocio) { alert('Completa todos los campos'); return; }
+  var btn = document.querySelector('#page-registro button');
+  btn.textContent = 'Creando...'; btn.disabled = true;
+  var r = await sb.auth.signUp({ email: email, password: pass });
+  if (r.error) { btn.textContent='Crear mi cuenta'; btn.disabled=false; alert('Error: '+r.error.message); return; }
+  var ins = await sb.from('negocios').insert({ nombre: negocio, email: email, telefono: tel, owner_id: r.data.user.id, shark_bienvenida: 'Hola, gracias por llamar a '+negocio+'. Soy Shark.' });
+  console.log('Insert result:', ins);
+  await loadNegocio(r.data.user.id);
+  btn.textContent='Crear mi cuenta'; btn.disabled=false;
+  showPage('page-app');
+  setTimeout(function() { showSection('dashboard'); buildChart(); animateStats(); }, 150);
+}
+
+async function loadNegocio(userId) {
+  var r = await sb.from('negocios').select('*').eq('owner_id', userId).single();
+  if (r.data) {
+    currentNegocio = r.data;
+    var nameEl = document.querySelector('.u-name');
+    if (nameEl) nameEl.textContent = r.data.nombre;
+    var planEl = document.querySelector('.u-plan');
+    if (planEl) planEl.textContent = 'Plan ' + r.data.plan;
+  }
+}
+
+async function doLogout() { await sb.auth.signOut(); showPage('page-login'); }
+
 // ══ NAVIGATION ══
 function showPage(id) {
   document.querySelectorAll('.page').forEach(function(p) {
@@ -1092,15 +1164,6 @@ function showPage(id) {
   if (el) el.classList.add('active');
 }
 
-// ══ LOGIN ══
-function doLogin() {
-  var email = document.getElementById('l-email').value.trim();
-  var pass  = document.getElementById('l-pass').value;
-  document.getElementById('l-err').style.display = 'none';
-  if (!email || pass.length < 6) {
-    document.getElementById('l-err').style.display = 'block';
-    return;
-  }
   if (email.toLowerCase() === 'ai@sharkai.pe') {
     showPage('page-admin');
     return;
@@ -1113,16 +1176,6 @@ function doLogin() {
   }, 150);
 }
 
-// ══ REGISTRO ══
-function doRegister() {
-  var nombre  = document.getElementById('r-nombre').value.trim();
-  var email   = document.getElementById('r-email').value.trim();
-  var pass    = document.getElementById('r-pass').value;
-  var negocio = document.getElementById('r-negocio').value.trim();
-  if (!nombre || !email || pass.length < 6 || !negocio) {
-    alert('Completa todos los campos (contraseña mínimo 6 caracteres)');
-    return;
-  }
   showPage('page-app');
   setTimeout(function() {
     showSection('dashboard');
