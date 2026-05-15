@@ -1439,15 +1439,48 @@ function ftab(el) {
 }
 
 // ── ORDER DETAIL ──
-function openDetail(id,name,phone,tipo,hora,dir,status,total) {
-  document.getElementById('d-title').textContent='Pedido '+id;
-  document.getElementById('d-name').textContent=name;
-  document.getElementById('d-phone').textContent=phone;
-  document.getElementById('d-tipo').textContent=tipo;
-  document.getElementById('d-hora').textContent=hora;
-  document.getElementById('d-dir').textContent=dir;
-  document.getElementById('d-total').textContent=total;
-  const badges={live:'<span class="badge badge-live">● EN VIVO</span>',prep:'<span class="badge badge-prep">Preparando</span>',listo:'<span class="badge badge-ok">Listo</span>',cancel:'<span class="badge badge-cancel">Cancelado</span>',done:'<span class="badge badge-done">Entregado</span>'};
+async function openDetail(realId, name, phone, tipo, hora, dir, status, total) {
+  // If it's a real UUID (from loadPedidos), fetch from Supabase
+  if (realId && realId.length > 10 && !realId.startsWith('#')) {
+    var res = await sb.from('pedidos').select('*').eq('id', realId).single();
+    if (res.data) {
+      var p = res.data;
+      var statusMap = {nuevo:'<span class="badge live">Nuevo</span>',preparando:'<span class="badge prep">Preparando</span>',listo:'<span class="badge ok">Listo</span>',entregado:'<span class="badge done">Entregado</span>',cancelado:'<span class="badge cancel">Cancelado</span>'};
+      var hora2 = new Date(p.created_at).toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});
+      document.getElementById('d-title').textContent = 'Pedido #'+p.id.slice(-4).toUpperCase();
+      document.getElementById('d-badge').innerHTML = statusMap[p.estado]||p.estado;
+      document.getElementById('d-tipo').textContent = p.tipo === 'delivery' ? 'Delivery' : 'Pickup';
+      document.getElementById('d-hora').textContent = hora2;
+      document.getElementById('d-dir').textContent = p.direccion_entrega || '—';
+      document.getElementById('d-name').textContent = p.cliente_nombre || 'Desconocido';
+      document.getElementById('d-phone').textContent = p.cliente_telefono || '—';
+      document.getElementById('d-total').textContent = 'S/ '+parseFloat(p.total||0).toFixed(2);
+      // Products - fetch items if available
+      var itemsRes = await sb.from('pedido_items').select('*').eq('pedido_id', p.id);
+      var items = itemsRes.data || [];
+      var prodEl = document.getElementById('d-products-list');
+      if (prodEl) {
+        if (items.length > 0) {
+          prodEl.innerHTML = items.map(function(item) {
+            return '<div class="p-item"><div><div class="p-item-name">'+item.producto_nombre+'</div><div class="p-item-qty">x'+item.cantidad+' · S/ '+parseFloat(item.precio_unitario).toFixed(2)+' c/u</div></div><span class="p-item-price">S/ '+parseFloat(item.subtotal).toFixed(2)+'</span></div>';
+          }).join('') + '<div class="total-row"><span>Total</span><span>S/ '+parseFloat(p.total||0).toFixed(2)+'</span></div>';
+        } else {
+          prodEl.innerHTML = '<div style="padding:10px 0;font-size:13px;color:var(--text2)">Pedido por llamada · Total: S/ '+parseFloat(p.total||0).toFixed(2)+'</div><div class="total-row"><span>Total</span><span>S/ '+parseFloat(p.total||0).toFixed(2)+'</span></div>';
+        }
+      }
+      document.getElementById('detailOverlay').classList.add('open');
+      return;
+    }
+  }
+  // Fallback for hardcoded demo rows
+  document.getElementById('d-title').textContent='Pedido '+realId;
+  document.getElementById('d-name').textContent=name||'—';
+  document.getElementById('d-phone').textContent=phone||'—';
+  document.getElementById('d-tipo').textContent=tipo||'—';
+  document.getElementById('d-hora').textContent=hora||'—';
+  document.getElementById('d-dir').textContent=dir||'—';
+  document.getElementById('d-total').textContent=total||'—';
+  var badges={live:'<span class="badge live">● EN VIVO</span>',prep:'<span class="badge prep">Preparando</span>',listo:'<span class="badge ok">Listo</span>',cancel:'<span class="badge cancel">Cancelado</span>',done:'<span class="badge done">Entregado</span>'};
   document.getElementById('d-badge').innerHTML=badges[status]||'';
   document.getElementById('detailOverlay').classList.add('open');
 }
