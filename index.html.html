@@ -1429,7 +1429,7 @@ function renderProducts() {
   var html = filtered.map(function(p) {
     return '<div class="prod-card">'+
       '<div class="prod-card-img">'+p.emoji+
-        '<div class="prod-toggle-wrap"><button class="toggle '+(p.disponible?'on':'')+'" onclick="toggleProduct(''+p.id+'',this)"></button></div>'+
+        '<div class="prod-toggle-wrap"><button class="toggle '+(p.disponible?'on':'')+'\" data-id="'+p.id+'" onclick="toggleProduct(this.dataset.id,this)"></button></div>'+
       '</div>'+
       '<div class="prod-body">'+
         '<div class="prod-card-name">'+p.nombre+'</div>'+
@@ -1437,8 +1437,8 @@ function renderProducts() {
         '<div class="prod-card-foot">'+
           '<span class="prod-card-price">S/ '+parseFloat(p.precio).toFixed(2)+'</span>'+
           '<div class="prod-card-actions">'+
-            '<button class="icon-btn" onclick="openMenuModal(''+p.id+'')">✏️</button>'+
-            '<button class="icon-btn del" onclick="deleteProduct(''+p.id+'')">🗑️</button>'+
+            '<button class="icon-btn" data-id="'+p.id+'" onclick="openMenuModal(this.dataset.id)">✏️</button>'+
+            '<button class="icon-btn del" data-id="'+p.id+'" onclick="deleteProduct(this.dataset.id)">🗑️</button>'+
           '</div>'+
         '</div>'+
       '</div>'+
