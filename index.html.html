@@ -1303,36 +1303,132 @@ function checkPass(v) {
 
 // ── CHART ──
 function buildChart() {
-  const el = document.getElementById('barChart');
-  if (!el || el.children.length > 0) return;
-  const days=['L','M','M','J','V','S','D'];
-  const orders=[18,24,21,32,45,58,38];
-  const income=[8,11,9,14,20,26,17];
-  const max=Math.max(...orders,...income);
-  days.forEach((d,i)=>{
-    const col=document.createElement('div'); col.className='bar-col';
-    const pair=document.createElement('div'); pair.className='bar-pair';
-    const b1=document.createElement('div'); b1.className='bar b1';
-    b1.style.height=Math.round((orders[i]/max)*82)+'px';
-    const b2=document.createElement('div'); b2.className='bar b2';
-    b2.style.height=Math.round((income[i]/max)*82)+'px';
+  loadDashboard();
+}
+function animateStats() {
+  // Will be called by loadDashboard
+}
+
+async function loadDashboard() {
+  if (!currentNegocio) return;
+  var negId = currentNegocio.id;
+  var today = new Date().toISOString().split('T')[0];
+
+  // Pedidos de hoy
+  var pedRes = await sb.from('pedidos').select('*').eq('negocio_id', negId).gte('created_at', today);
+  var pedidos = pedRes.data || [];
+  var total = pedidos.reduce(function(s,p){ return s + (p.estado !== 'cancelado' ? parseFloat(p.total||0) : 0); }, 0);
+  var ticket = pedidos.length > 0 ? total / pedidos.filter(function(p){return p.estado!=='cancelado';}).length : 0;
+
+  // Llamadas de hoy
+  var callRes = await sb.from('llamadas').select('*').eq('negocio_id', negId).gte('created_at', today);
+  var llamadas = callRes.data || [];
+  var atendidas = llamadas.filter(function(l){return l.estado==='atendida';}).length;
+  var perdidas  = llamadas.filter(function(l){return l.estado==='perdida';}).length;
+
+  // Animate numbers
+  function count(elId, target, pre, dec) {
+    var el = document.getElementById(elId);
+    if (!el) return;
+    pre = pre || ''; dec = dec || 0;
+    var v = 0, step = target / 60;
+    var t = setInterval(function() {
+      v = Math.min(v + step, target);
+      el.textContent = pre + (dec ? v.toFixed(dec) : Math.round(v));
+      if (v >= target) clearInterval(t);
+    }, 16);
+  }
+
+  count('d-pedidos', pedidos.length);
+  count('d-ingresos', total, 'S/ ', 0);
+  count('d-ticket', isNaN(ticket) ? 0 : ticket, 'S/ ', 0);
+  count('d-llamadas', llamadas.length);
+
+  // Update llamadas stats
+  var atEl = document.getElementById('d-atendidas');
+  var perEl = document.getElementById('d-perdidas');
+  if (atEl) atEl.textContent = atendidas;
+  if (perEl) perEl.textContent = perdidas;
+
+  // Render recent calls
+  renderRecentCalls(llamadas.slice(0,5));
+
+  // Render pedidos por tipo
+  var pickup   = pedidos.filter(function(p){return p.tipo==='pickup';}).length;
+  var delivery = pedidos.filter(function(p){return p.tipo==='delivery';}).length;
+  var pkEl = document.getElementById('d-pickup');
+  var dlEl = document.getElementById('d-delivery');
+  if (pkEl) pkEl.textContent = pickup;
+  if (dlEl) dlEl.textContent = delivery;
+
+  // Build chart with last 7 days
+  await buildChartReal(negId);
+}
+
+function renderRecentCalls(llamadas) {
+  var el = document.getElementById('recent-calls');
+  if (!el) return;
+  if (llamadas.length === 0) {
+    el.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text3);font-size:13px">Sin llamadas hoy</div>';
+    return;
+  }
+  el.innerHTML = llamadas.map(function(l) {
+    var badge = l.estado === 'atendida'
+      ? '<span class="badge ok">✓ Atendida</span>'
+      : l.estado === 'en_vivo'
+      ? '<span class="badge live">● EN VIVO</span>'
+      : '<span class="badge cancel">✗ Perdida</span>';
+    var dur = l.duracion > 0 ? Math.floor(l.duracion/60)+':'+(l.duracion%60<10?'0':'')+l.duracion%60 : '—';
+    var hora = new Date(l.created_at).toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});
+    return '<div class="dash-call-row"><span style="color:var(--text)">'+l.telefono+'</span>'+badge+'<span style="color:var(--text3);font-size:11px">'+dur+'</span><span style="color:var(--text3);font-size:11px">'+hora+'</span></div>';
+  }).join('');
+}
+
+async function buildChartReal(negId) {
+  var el = document.getElementById('barChart');
+  if (!el) return;
+  el.innerHTML = '';
+  // Get last 7 days
+  var days = [];
+  for (var i = 6; i >= 0; i--) {
+    var d = new Date();
+    d.setDate(d.getDate() - i);
+    days.push(d.toISOString().split('T')[0]);
+  }
+  var labels = ['L','M','M','J','V','S','D'];
+  var orders = [0,0,0,0,0,0,0];
+  var income = [0,0,0,0,0,0,0];
+
+  var res = await sb.from('pedidos').select('created_at,total,estado').eq('negocio_id', negId).gte('created_at', days[0]);
+  (res.data||[]).forEach(function(p) {
+    var d = p.created_at.split('T')[0];
+    var idx = days.indexOf(d);
+    if (idx >= 0) {
+      orders[idx]++;
+      if (p.estado !== 'cancelado') income[idx] += parseFloat(p.total||0)/10;
+    }
+  });
+
+  var max = Math.max(...orders, ...income, 1);
+  days.forEach(function(d, i) {
+    var col = document.createElement('div');
+    col.className = 'bar-group';
+    var pair = document.createElement('div');
+    pair.className = 'bar-pair';
+    var b1 = document.createElement('div');
+    b1.className = 'bar b1';
+    b1.style.height = Math.round(orders[i]/max*80)+'px';
+    var b2 = document.createElement('div');
+    b2.className = 'bar b2';
+    b2.style.height = Math.round(income[i]/max*80)+'px';
+    var lbl = document.createElement('div');
+    lbl.className = 'bar-lbl';
+    lbl.textContent = new Date(d+'T12:00:00').toLocaleDateString('es-PE',{weekday:'narrow'});
     pair.append(b1,b2);
-    const lbl=document.createElement('div'); lbl.className='bar-lbl'; lbl.textContent=d;
-    col.append(pair,lbl); el.appendChild(col);
+    col.append(pair,lbl);
+    el.appendChild(col);
   });
 }
-
-function animateStats() {
-  function count(el,target,pre='',suf='',dec=0){
-    let v=0; const s=target/(1200/16);
-    const t=setInterval(()=>{v=Math.min(v+s,target);el.textContent=pre+v.toFixed(dec)+suf;if(v>=target)clearInterval(t);},16);
-  }
-  count(document.getElementById('d-pedidos'),147);
-  count(document.getElementById('d-ingresos'),2208,'S/ ','',0);
-  count(document.getElementById('d-ticket'),42,'S/ ','',0);
-}
-
-// ── FILTERS ──
 function ftab(el) {
   el.closest('.filter-tabs').querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
@@ -1547,14 +1643,28 @@ function selCatEmoji(el) {
 
 async function saveCategory() {
   var nombre = document.getElementById('cat-new-name').value.trim();
-  var emoji  = document.querySelector('#catModal .emoji-opt.sel')?.textContent || '🍽️';
+  var emoji  = document.querySelector('#catModal .emoji-opt.sel') ? document.querySelector('#catModal .emoji-opt.sel').textContent : '🍽️';
   var btn    = document.querySelector('#catModal .btn-save');
   if (!nombre) { alert('Escribe un nombre'); return; }
   if (!currentNegocio) return;
   btn.textContent = 'Creando...'; btn.disabled = true;
-  await sb.from('categorias_menu').insert({ nombre, emoji, negocio_id: currentNegocio.id });
+  await sb.from('categorias_menu').insert({ nombre: nombre, emoji: emoji, negocio_id: currentNegocio.id });
   btn.textContent = 'Crear categoría'; btn.disabled = false;
   document.getElementById('catModal').classList.remove('open');
+  await loadMenu();
+}
+
+async function deleteCategory(id, nombre) {
+  var prods = allProducts.filter(function(p){ return p.categoria === nombre; }).length;
+  var msg = prods > 0
+    ? 'Esta categoría tiene ' + prods + ' plato(s). ¿Eliminar la categoría? Los platos quedarán sin categoría.'
+    : '¿Eliminar la categoría "' + nombre + '"?';
+  if (!confirm(msg)) return;
+  // Remove category from products
+  if (prods > 0) {
+    await sb.from('productos').update({ categoria: '' }).eq('negocio_id', currentNegocio.id).eq('categoria', nombre);
+  }
+  await sb.from('categorias_menu').delete().eq('id', id);
   await loadMenu();
 }
 
