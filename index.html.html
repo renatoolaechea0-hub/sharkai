@@ -1241,7 +1241,11 @@ function showSection(name) {
   var titles = {dashboard:'Dashboard',pedidos:'Pedidos',menu:'Menú',clientes:'Clientes',llamadas:'Llamadas',config:'Configuración'};
   var tb = document.getElementById('topbar-title');
   if (tb) tb.textContent = titles[name] || name;
-  if (name === 'dashboard') { buildChart(); } if (name === 'menu') { loadMenu(); }
+  if (name === 'dashboard') { buildChart(); loadTopProductos(); }
+  if (name === 'menu') { loadMenu(); }
+  if (name === 'pedidos') { loadPedidos(); }
+  if (name === 'clientes') { loadClientes(); }
+  if (name === 'llamadas') { loadLlamadas(); }
 }
 
 
@@ -1684,6 +1688,126 @@ function setConfigTab(el,sectionId) {
 // Init
 buildChart();
 
+
+// ══ PEDIDOS ══
+async function loadPedidos() {
+  if (!currentNegocio) return;
+  var res = await sb.from('pedidos').select('*').eq('negocio_id', currentNegocio.id).order('created_at', {ascending: false});
+  var pedidos = res.data || [];
+  var hoy = new Date().toISOString().split('T')[0];
+  var hoyPeds = pedidos.filter(function(p){ return p.created_at.startsWith(hoy); });
+  var delivery = hoyPeds.filter(function(p){ return p.tipo === 'delivery'; }).length;
+  var pickup   = hoyPeds.filter(function(p){ return p.tipo === 'pickup'; }).length;
+  var cancelado= hoyPeds.filter(function(p){ return p.estado === 'cancelado'; }).length;
+  var ids = ['ped-stat-total','ped-stat-delivery','ped-stat-pickup','ped-stat-cancelado'];
+  var vals = [hoyPeds.length, delivery, pickup, cancelado];
+  ids.forEach(function(id,i){ var el=document.getElementById(id); if(el) el.textContent=vals[i]; });
+  var tbody = document.getElementById('pedidos-tbody');
+  if (!tbody) return;
+  if (pedidos.length === 0) { tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text3)">Sin pedidos todavía</td></tr>'; return; }
+  var rows = '';
+  pedidos.forEach(function(p) {
+    var statusMap = { nuevo:'<span class="badge live">Nuevo</span>', preparando:'<span class="badge prep">Preparando</span>', listo:'<span class="badge ok">Listo</span>', entregado:'<span class="badge done">Entregado</span>', cancelado:'<span class="badge cancel">Cancelado</span>' };
+    var tipoMap = { delivery:'<span class="badge delivery">Delivery</span>', pickup:'<span class="badge pickup">Pickup</span>' };
+    var hora = new Date(p.created_at).toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});
+    var shortId = p.id.slice(-4).toUpperCase();
+    var canFinish = p.estado === 'nuevo' || p.estado === 'preparando';
+    rows += '<tr>';
+    rows += '<td><span class="order-id">#'+shortId+'</span></td>';
+    rows += '<td><div style="font-size:13px;font-weight:500;color:var(--text)">'+(p.cliente_nombre||'Desconocido')+'</div><div class="order-phone">'+(p.cliente_telefono||'')+'</div></td>';
+    rows += '<td>'+(tipoMap[p.tipo]||p.tipo)+'</td>';
+    rows += '<td style="color:var(--text);font-size:13px">'+(p.notas||'—')+'</td>';
+    rows += '<td>'+(statusMap[p.estado]||p.estado)+'</td>';
+    rows += '<td style="font-weight:600;color:var(--text)">S/ '+parseFloat(p.total||0).toFixed(2)+'</td>';
+    rows += '<td style="color:var(--text3);font-size:12px">'+hora+'</td>';
+    if (canFinish) {
+      rows += '<td><button class="act-btn g" data-pedid="'+p.id+'" onclick="marcarListo(this)">Listo</button></td>';
+    } else {
+      rows += '<td><button class="act-btn">Ver</button></td>';
+    }
+    rows += '</tr>';
+  });
+  tbody.innerHTML = rows;
+}
+
+function marcarListo(btn) {
+  var id = btn.dataset.pedid;
+  btn.disabled = true;
+  sb.from('pedidos').update({ estado: 'listo' }).eq('id', id).then(function() { loadPedidos(); });
+}
+
+// ══ CLIENTES ══
+async function loadClientes() {
+  if (!currentNegocio) return;
+  var res = await sb.from('clientes').select('*').eq('negocio_id', currentNegocio.id).order('total_gastado', {ascending: false});
+  var clientes = res.data || [];
+  var tbody = document.getElementById('clientes-tbody');
+  if (!tbody) return;
+  if (clientes.length === 0) { tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text3)">Sin clientes todavía</td></tr>'; return; }
+  var rows = '';
+  clientes.forEach(function(cl) {
+    var ultimo = cl.ultimo_pedido ? new Date(cl.ultimo_pedido).toLocaleDateString('es-PE') : '—';
+    rows += '<tr>';
+    rows += '<td><div style="font-size:13px;font-weight:500;color:var(--text)">'+(cl.nombre||'Desconocido')+'</div></td>';
+    rows += '<td style="color:var(--text2)">'+(cl.telefono||'—')+'</td>';
+    rows += '<td style="color:var(--text2)">'+(cl.total_pedidos||0)+'</td>';
+    rows += '<td style="font-weight:600;color:var(--text)">S/ '+parseFloat(cl.total_gastado||0).toFixed(2)+'</td>';
+    rows += '<td style="color:var(--text3)">'+ultimo+'</td>';
+    rows += '</tr>';
+  });
+  tbody.innerHTML = rows;
+}
+
+// ══ LLAMADAS ══
+async function loadLlamadas() {
+  if (!currentNegocio) return;
+  var res = await sb.from('llamadas').select('*').eq('negocio_id', currentNegocio.id).order('created_at', {ascending: false});
+  var llamadas = res.data || [];
+  var hoy = new Date().toISOString().split('T')[0];
+  var hoyLls = llamadas.filter(function(l){ return l.created_at.startsWith(hoy); });
+  var atendidas = hoyLls.filter(function(l){ return l.estado==='atendida'; }).length;
+  var perdidas  = hoyLls.filter(function(l){ return l.estado==='perdida'; }).length;
+  var durTotal  = hoyLls.reduce(function(s,l){ return s+(l.duracion||0); }, 0);
+  var durProm   = atendidas > 0 ? Math.round(durTotal/atendidas) : 0;
+  var durStr    = Math.floor(durProm/60)+':'+(durProm%60<10?'0':'')+durProm%60;
+  var ids  = ['ll-stat-total','ll-stat-atendidas','ll-stat-perdidas','ll-stat-duracion'];
+  var vals = [hoyLls.length, atendidas, perdidas, durStr];
+  ids.forEach(function(id,i){ var el=document.getElementById(id); if(el) el.textContent=vals[i]; });
+  var tbody = document.getElementById('llamadas-tbody');
+  if (!tbody) return;
+  if (llamadas.length === 0) { tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text3)">Sin llamadas todavía</td></tr>'; return; }
+  var rows = '';
+  llamadas.forEach(function(l) {
+    var badge = l.estado==='atendida' ? '<span class="badge ok">Atendida</span>' : l.estado==='en_vivo' ? '<span class="badge live">EN VIVO</span>' : '<span class="badge cancel">Perdida</span>';
+    var dur = l.duracion>0 ? Math.floor(l.duracion/60)+':'+(l.duracion%60<10?'0':'')+l.duracion%60 : '—';
+    var fecha = new Date(l.created_at).toLocaleString('es-PE',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
+    rows += '<tr>';
+    rows += '<td style="color:var(--text)">'+(l.telefono||'—')+'</td>';
+    rows += '<td>'+badge+'</td>';
+    rows += '<td style="color:var(--text2)">'+dur+'</td>';
+    rows += '<td style="color:var(--text2)">'+(l.resultado||'—')+'</td>';
+    rows += '<td style="color:var(--text3);font-size:11px">—</td>';
+    rows += '<td style="color:var(--text3)">'+fecha+'</td>';
+    rows += '</tr>';
+  });
+  tbody.innerHTML = rows;
+}
+
+// ══ TOP PRODUCTOS DASHBOARD ══
+async function loadTopProductos() {
+  if (!currentNegocio) return;
+  var tbody = document.getElementById('top-productos-tbody');
+  if (!tbody) return;
+  var prodRes = await sb.from('productos').select('nombre,precio').eq('negocio_id', currentNegocio.id).limit(5);
+  var prods = prodRes.data || [];
+  if (prods.length === 0) { tbody.innerHTML='<div style="padding:20px;text-align:center;color:var(--text3)">Sin productos</div>'; return; }
+  var html = '';
+  prods.forEach(function(p,i) {
+    var pct = Math.round(100 - i*15);
+    html += '<div class="prod-row"><span class="prod-name">'+p.nombre+'</span><span class="prod-qty">—</span><div class="prod-bar-w"><div class="prod-bar-f" style="width:'+pct+'%"></div></div><span class="prod-inc">S/ '+parseFloat(p.precio).toFixed(2)+'</span></div>';
+  });
+  tbody.innerHTML = html;
+}
 </script>
 </body>
 </html>
