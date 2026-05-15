@@ -1381,10 +1381,11 @@ async function loadMenu() {
 function renderCategories() {
   var list = document.getElementById('cat-list');
   if (!list) return;
-  var html = '<button class="cat-item active" onclick="filterCat(this,'all')"><span class="cat-item-name">🍽️ Todos</span><span class="cat-count">'+allProducts.length+'</span></button>';
+  var html = '<button class="cat-item active" onclick="filterCat(this,\'all\')"><span class="cat-item-name">🍽️ Todos</span><span class="cat-count">'+allProducts.length+'</span></button>';
   allCategories.forEach(function(cat) {
     var count = allProducts.filter(function(p){return p.categoria===cat.nombre;}).length;
-    html += '<button class="cat-item" onclick="filterCat(this,''+cat.nombre+'')"><span class="cat-item-name">'+cat.emoji+' '+cat.nombre+'</span><span class="cat-count">'+count+'</span></button>';
+    var safeName = cat.nombre.replace(/'/g, "\'");
+    html += '<button class="cat-item" onclick="filterCat(this,\'' + safeName + '\')"><span class="cat-item-name">'+cat.emoji+' '+cat.nombre+'</span><span class="cat-count">'+count+'</span></button>';
   });
   list.innerHTML = html;
 }
