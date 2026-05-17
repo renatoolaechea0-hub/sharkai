@@ -734,13 +734,13 @@ tbody tr:hover td { background:#fafafa; cursor:pointer; }
       </div>
       <div class="content">
         <div class="mini-stats">
-          <div class="mini-stat"><div class="mini-stat-icon" style="background:rgba(200,240,90,.15)">🛒</div><div><div class="mini-stat-val">147</div><div class="mini-stat-lbl">Pedidos hoy</div></div></div>
-          <div class="mini-stat"><div class="mini-stat-icon" style="background:rgba(37,99,235,.1)">🚗</div><div><div class="mini-stat-val">89</div><div class="mini-stat-lbl">Delivery</div></div></div>
-          <div class="mini-stat"><div class="mini-stat-icon" style="background:rgba(22,163,74,.1)">🏃</div><div><div class="mini-stat-val">58</div><div class="mini-stat-lbl">Pickup</div></div></div>
-          <div class="mini-stat"><div class="mini-stat-icon" style="background:rgba(220,38,38,.08)">❌</div><div><div class="mini-stat-val">3</div><div class="mini-stat-lbl">Cancelados</div></div></div>
+          <div class="mini-stat"><div class="mini-stat-icon" style="background:rgba(200,240,90,.15)">🛒</div><div><div class="mini-stat-val" id="ped-stat-total">—</div><div class="mini-stat-lbl">Pedidos hoy</div></div></div>
+          <div class="mini-stat"><div class="mini-stat-icon" style="background:rgba(37,99,235,.1)">🚗</div><div><div class="mini-stat-val" id="ped-stat-delivery">—</div><div class="mini-stat-lbl">Delivery</div></div></div>
+          <div class="mini-stat"><div class="mini-stat-icon" style="background:rgba(22,163,74,.1)">🏃</div><div><div class="mini-stat-val" id="ped-stat-pickup">—</div><div class="mini-stat-lbl">Pickup</div></div></div>
+          <div class="mini-stat"><div class="mini-stat-icon" style="background:rgba(220,38,38,.08)">❌</div><div><div class="mini-stat-val" id="ped-stat-cancelado">—</div><div class="mini-stat-lbl">Cancelados</div></div></div>
         </div>
         <div class="table-wrap">
-          <div class="card-head" style="padding:13px 18px">Lista de pedidos <span style="font-size:12px;color:var(--text3);font-weight:400;margin-left:8px">147 pedidos · Hoy</span></div>
+          <div class="card-head" style="padding:13px 18px">Lista de pedidos <span style="font-size:12px;color:var(--text3);font-weight:400;margin-left:8px" id="ped-count">— pedidos</span></div>
           <table>
             <thead><tr><th>#Pedido</th><th>Cliente</th><th>Tipo</th><th>Productos</th><th>Estado</th><th>Total</th><th>Hora</th><th></th></tr></thead>
             <tbody id="pedidos-tbody">
@@ -1092,10 +1092,9 @@ tbody tr:hover td { background:#fafafa; cursor:pointer; }
       </div>
       <div class="detail-sec">
         <div class="detail-sec-title">Productos</div>
-        <div class="prod-item"><div><div class="prod-item-name">Hamburguesa clásica</div><div class="prod-item-qty">x2 · S/ 15.00 c/u</div></div><span class="prod-item-price">S/ 30.00</span></div>
-        <div class="prod-item"><div><div class="prod-item-name">Gaseosa personal</div><div class="prod-item-qty">x1 · S/ 5.00 c/u</div></div><span class="prod-item-price">S/ 5.00</span></div>
-        <div class="prod-item"><div><div class="prod-item-name">Delivery</div><div class="prod-item-qty">Costo de envío</div></div><span class="prod-item-price">S/ 7.00</span></div>
-        <div class="total-row"><span>Total</span><span id="d-total"></span></div>
+        <div id="d-products-list">
+          <div class="total-row"><span>Total</span><span id="d-total"></span></div>
+        </div>
       </div>
     </div>
     <div class="detail-foot">
@@ -1735,6 +1734,8 @@ async function loadPedidos() {
   var ids = ['ped-stat-total','ped-stat-delivery','ped-stat-pickup','ped-stat-cancelado'];
   var vals = [hoyPeds.length, delivery, pickup, cancelado];
   ids.forEach(function(id,i){ var el=document.getElementById(id); if(el) el.textContent=vals[i]; });
+  var countEl = document.getElementById('ped-count');
+  if (countEl) countEl.textContent = pedidos.length + ' pedidos · Hoy';
   var tbody = document.getElementById('pedidos-tbody');
   if (!tbody) return;
   if (pedidos.length === 0) { tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text3)">Sin pedidos todavía</td></tr>'; return; }
