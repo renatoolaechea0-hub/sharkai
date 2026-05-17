@@ -743,7 +743,7 @@ tbody tr:hover td { background:#fafafa; cursor:pointer; }
           <div class="card-head" style="padding:13px 18px">Lista de pedidos <span style="font-size:12px;color:var(--text3);font-weight:400;margin-left:8px">147 pedidos · Hoy</span></div>
           <table>
             <thead><tr><th>#Pedido</th><th>Cliente</th><th>Tipo</th><th>Productos</th><th>Estado</th><th>Total</th><th>Hora</th><th></th></tr></thead>
-            <tbody>
+            <tbody id="pedidos-tbody">
               <tr onclick="openDetail('#4831','Carlos Mendoza','+51 940 640 221','Delivery','20:34','Av. Los Maestros 120','live','S/ 42.00')">
                 <td><strong style="color:var(--text)">#4831</strong></td>
                 <td><div style="color:var(--text);font-size:13px">Carlos Mendoza</div><div style="font-size:11px;color:var(--text3)">+51 940 640 221</div></td>
@@ -911,7 +911,7 @@ tbody tr:hover td { background:#fafafa; cursor:pointer; }
           <div class="stat-card"><div class="stat-label">🔁 Recurrentes</div><div class="stat-value">71%</div><div class="stat-sub">volvieron este mes</div></div>
           <div class="stat-card"><div class="stat-label">⭐ Ticket promedio</div><div class="stat-value">S/ 42</div><div class="stat-sub">por cliente</div></div>
         </div>
-        <div class="table-wrap">
+        <div class="table-wrap" id="clientes-tbody">
           <div class="card-head" style="padding:13px 18px">Lista de clientes</div>
           <div class="client-row"><div class="client-av">CM</div><div><div class="client-name">Carlos Mendoza</div><div class="client-meta">+51 940 640 221 · Ica</div></div><div class="client-right"><div class="client-total">S/ 284</div><div class="client-orders">8 pedidos</div></div></div>
           <div class="client-row"><div class="client-av">LG</div><div><div class="client-name">Lucía García</div><div class="client-meta">+51 983 911 731 · Ica</div></div><div class="client-right"><div class="client-total">S/ 196</div><div class="client-orders">6 pedidos</div></div></div>
@@ -951,7 +951,7 @@ tbody tr:hover td { background:#fafafa; cursor:pointer; }
           <div class="card-head" style="padding:13px 18px">Historial de llamadas</div>
           <table>
             <thead><tr><th>Teléfono</th><th>Estado</th><th>Duración</th><th>Resultado</th><th>Fecha</th><th></th></tr></thead>
-            <tbody>
+            <tbody id="llamadas-tbody">
               <tr><td>+51 56 8821</td><td><span class="badge badge-live">● EN VIVO</span></td><td>—</td><td style="color:var(--text)">Tomando pedido</td><td>Ahora</td><td><button class="action-btn">Escuchar</button></td></tr>
               <tr><td>+51 940 640 221</td><td><span class="badge badge-atendida">✓ Atendida</span></td><td>0:38</td><td style="color:var(--text)">Pedido #4831</td><td>20:34</td><td><button class="action-btn">Escuchar</button></td></tr>
               <tr><td>+51 983 911 731</td><td><span class="badge badge-atendida">✓ Atendida</span></td><td>1:12</td><td style="color:var(--text)">Pedido #4830</td><td>20:31</td><td><button class="action-btn">Escuchar</button></td></tr>
@@ -1774,19 +1774,21 @@ async function loadClientes() {
   if (!currentNegocio) return;
   var res = await sb.from('clientes').select('*').eq('negocio_id', currentNegocio.id).order('total_gastado', {ascending: false});
   var clientes = res.data || [];
-  var tbody = document.getElementById('clientes-tbody');
+  var tbody = document.getElementById('clientes-tbody') || document.getElementById('clientes-list');
   if (!tbody) return;
   if (clientes.length === 0) { tbody.innerHTML='<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text3)">Sin clientes todavía</td></tr>'; return; }
   var rows = '';
   clientes.forEach(function(cl) {
-    var ultimo = cl.ultimo_pedido ? new Date(cl.ultimo_pedido).toLocaleDateString('es-PE') : '—';
-    rows += '<tr>';
-    rows += '<td><div style="font-size:13px;font-weight:500;color:var(--text)">'+(cl.nombre||'Desconocido')+'</div></td>';
-    rows += '<td style="color:var(--text2)">'+(cl.telefono||'—')+'</td>';
-    rows += '<td style="color:var(--text2)">'+(cl.total_pedidos||0)+'</td>';
-    rows += '<td style="font-weight:600;color:var(--text)">S/ '+parseFloat(cl.total_gastado||0).toFixed(2)+'</td>';
-    rows += '<td style="color:var(--text3)">'+ultimo+'</td>';
-    rows += '</tr>';
+    var initials = (cl.nombre||'?').split(' ').map(function(w){return w[0];}).slice(0,2).join('').toUpperCase();
+    var gastado = 'S/ '+parseFloat(cl.total_gastado||0).toFixed(2);
+    var pedidos = (cl.total_pedidos||0)+' pedidos';
+    rows += '<div class="client-row">';
+    rows += '<div class="client-av">'+initials+'</div>';
+    rows += '<div><div class="client-name">'+(cl.nombre||'Desconocido')+'</div>';
+    rows += '<div class="client-meta">'+(cl.telefono||'—')+'</div></div>';
+    rows += '<div style="margin-left:auto;text-align:right"><div style="font-weight:600;color:var(--text)">'+gastado+'</div>';
+    rows += '<div style="font-size:12px;color:var(--text3)">'+pedidos+'</div></div>';
+    rows += '</div>';
   });
   tbody.innerHTML = rows;
 }
