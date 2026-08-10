@@ -385,83 +385,249 @@ tbody tr:hover td { background:#fafafa; cursor:pointer; }
 .toggle-row-text { font-size:13px; color:var(--text); }
 .toggle-row-sub { font-size:11px; color:var(--text3); margin-top:2px; }
 
+/* ══════════════════════════════════════════
+   LANDING PAGE
+══════════════════════════════════════════ */
+.page.lp-page { flex-direction:column; background:var(--bg); overflow-y:auto; }
+.lp-wrap { width:100%; max-width:1120px; margin:0 auto; padding:0 24px; }
+
+.lp-nav { position:sticky; top:0; z-index:40; background:rgba(245,246,248,.85); backdrop-filter:blur(8px); border-bottom:1px solid var(--border); }
+.lp-nav-inner { display:flex; align-items:center; justify-content:space-between; height:64px; }
+.lp-logo { display:flex; align-items:center; gap:8px; font-family:var(--serif); font-size:20px; color:var(--ink); text-decoration:none; cursor:pointer; }
+.lp-logo-dot { width:8px; height:8px; background:var(--accent2); border-radius:50%; }
+.lp-nav-links { display:flex; align-items:center; gap:28px; }
+.lp-nav-links a { font-size:13px; color:var(--text2); text-decoration:none; cursor:pointer; transition:color .15s; }
+.lp-nav-links a:hover { color:var(--text); }
+.lp-nav-actions { display:flex; align-items:center; gap:14px; }
+.lp-btn-ghost { font-size:13px; font-weight:500; color:var(--text); background:none; border:none; cursor:pointer; font-family:var(--sans); }
+.lp-btn { font-family:var(--sans); font-size:13px; font-weight:500; padding:9px 18px; border-radius:8px; border:none; cursor:pointer; transition:background .2s,transform .15s; }
+.lp-btn-primary { background:var(--accent); color:var(--ink); }
+.lp-btn-primary:hover { background:var(--accent2); transform:translateY(-1px); }
+.lp-btn-lg { padding:13px 26px; font-size:14px; }
+
+.lp-hero { background:var(--ink); padding:72px 0 88px; position:relative; overflow:hidden; }
+.lp-hero::before { content:''; position:absolute; top:-160px; right:-160px; width:560px; height:560px; background:radial-gradient(circle,rgba(200,240,90,.10) 0%,transparent 65%); pointer-events:none; }
+.lp-hero-inner { display:flex; align-items:center; gap:56px; position:relative; }
+.lp-hero-left { flex:1; min-width:320px; }
+.lp-tag { display:inline-flex; align-items:center; gap:8px; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:22px; }
+.lp-tag::before { content:'●'; color:var(--accent); font-size:8px; }
+.lp-hero h1 { font-family:var(--serif); font-weight:400; font-size:52px; line-height:1.08; letter-spacing:-.02em; color:#fff; margin-bottom:20px; }
+.lp-hero h1 em { font-style:italic; color:var(--accent); }
+.lp-hero-sub { font-size:16px; line-height:1.65; color:rgba(255,255,255,.55); max-width:440px; margin-bottom:32px; }
+.lp-hero-ctas { display:flex; align-items:center; gap:16px; }
+.lp-link-light { font-size:13px; color:rgba(255,255,255,.6); text-decoration:none; cursor:pointer; }
+.lp-link-light:hover { color:#fff; }
+
+.lp-call-card { flex:1; min-width:300px; max-width:380px; background:var(--surface); border-radius:16px; padding:20px; box-shadow:0 24px 60px rgba(0,0,0,.35); }
+.lp-call-head { display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--text3); letter-spacing:.5px; text-transform:uppercase; margin-bottom:14px; }
+.lp-call-bubble { border-radius:10px; padding:10px 12px; font-size:13px; line-height:1.5; margin-bottom:8px; max-width:88%; }
+.lp-call-bubble.cliente { background:var(--bg); color:var(--text); }
+.lp-call-bubble.shark { background:rgba(200,240,90,.18); color:#3f5c00; margin-left:auto; }
+.lp-call-who { font-size:10px; font-weight:600; letter-spacing:.5px; text-transform:uppercase; color:var(--text3); margin-bottom:4px; }
+.lp-call-result { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--green); font-weight:500; margin-top:14px; padding-top:14px; border-top:1px solid var(--border); }
+
+.lp-section { padding:88px 0; }
+.lp-eyebrow { font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--text3); margin-bottom:14px; }
+.lp-h2 { font-family:var(--serif); font-weight:400; font-size:36px; line-height:1.15; letter-spacing:-.01em; color:var(--text); max-width:600px; margin-bottom:56px; }
+
+.lp-steps { display:flex; gap:40px; flex-wrap:wrap; }
+.lp-step { flex:1; min-width:220px; }
+.lp-step-num { font-size:11px; font-weight:600; letter-spacing:1px; color:var(--accent2); margin-bottom:14px; }
+.lp-step h3 { font-size:19px; font-weight:600; color:var(--text); margin-bottom:10px; }
+.lp-step p { font-size:14px; line-height:1.6; color:var(--text2); }
+
+.lp-focus { background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+.lp-focus-inner { display:flex; gap:64px; align-items:flex-start; flex-wrap:wrap; }
+.lp-focus-left { flex:1; min-width:300px; }
+.lp-focus-left h2 { font-family:var(--serif); font-weight:400; font-size:34px; color:var(--text); margin-bottom:18px; }
+.lp-focus-left > p { font-size:14px; line-height:1.7; color:var(--text2); max-width:420px; margin-bottom:24px; }
+.lp-check { display:flex; align-items:flex-start; gap:10px; font-size:14px; color:var(--text); padding:10px 0; border-top:1px solid var(--border); }
+.lp-check:first-of-type { border-top:none; }
+.lp-check span.mark { color:var(--green); font-weight:700; flex-shrink:0; }
+
+.lp-dash-card { flex:1; min-width:300px; max-width:400px; background:var(--bg); border:1px solid var(--border); border-radius:14px; padding:18px; }
+.lp-dash-head { font-size:11px; letter-spacing:.5px; text-transform:uppercase; color:var(--text3); margin-bottom:12px; }
+.lp-dash-row { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-top:1px solid var(--border); font-size:13px; }
+.lp-dash-row:first-of-type { border-top:none; }
+.lp-dash-time { color:var(--text3); width:44px; flex-shrink:0; }
+.lp-dash-who { flex:1; color:var(--text); }
+.lp-dash-amt { color:var(--text2); margin-right:10px; }
+.lp-dash-badge { font-size:10px; font-weight:600; padding:3px 8px; border-radius:100px; }
+.lp-dash-badge.live { background:var(--red-bg); color:var(--red); }
+.lp-dash-badge.done { background:var(--green-bg); color:var(--green); }
+
+.lp-chips { display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; }
+.lp-chip { font-size:12px; color:var(--text2); background:var(--bg); border:1px solid var(--border); padding:7px 14px; border-radius:100px; }
+
+.lp-testimonial { padding:80px 0; text-align:center; }
+.lp-quote { font-family:var(--serif); font-size:28px; line-height:1.4; color:var(--text); max-width:680px; margin:0 auto 20px; }
+.lp-quote-by { font-size:12px; letter-spacing:.5px; text-transform:uppercase; color:var(--text3); }
+
+.lp-final { background:var(--ink); padding:88px 0; text-align:center; }
+.lp-final h2 { font-family:var(--serif); font-weight:400; font-size:38px; color:#fff; margin-bottom:14px; }
+.lp-final p { font-size:14px; color:rgba(255,255,255,.5); margin-bottom:30px; }
+.lp-final-note { font-size:12px; color:rgba(255,255,255,.3); margin-top:16px; }
+
+.lp-footer { background:var(--ink); border-top:1px solid rgba(255,255,255,.08); padding:40px 0; }
+.lp-footer-inner { display:flex; justify-content:space-between; flex-wrap:wrap; gap:32px; }
+.lp-footer p { font-size:12px; color:rgba(255,255,255,.35); max-width:280px; line-height:1.6; }
+.lp-footer-col h4 { font-size:11px; letter-spacing:.5px; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:12px; }
+.lp-footer-col a { display:block; font-size:12px; color:rgba(255,255,255,.55); text-decoration:none; margin-bottom:8px; cursor:pointer; }
+.lp-footer-col a:hover { color:#fff; }
+.lp-footer-bottom { margin-top:32px; padding-top:20px; border-top:1px solid rgba(255,255,255,.08); font-size:11px; color:rgba(255,255,255,.25); }
+
+@media (max-width:760px) {
+  .lp-hero h1 { font-size:36px; }
+  .lp-hero-inner { flex-direction:column; }
+  .lp-nav-links { display:none; }
+  .lp-h2, .lp-focus-left h2 { font-size:26px; }
+}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
 
-<!-- ═══ LOGIN ═══ -->
-<div class="page active" id="page-login">
-  <div class="auth-left">
-    <div class="auth-logo"><span class="auth-logo-dot"></span>Shark.AI</div>
-    <div class="auth-left-content">
-      <div class="auth-left-tag">Para restaurantes</div>
-      <h2>Tu recepcionista<br><em>nunca duerme.</em></h2>
-      <p>Accede a tu panel para ver pedidos en tiempo real y configurar a Shark para tu restaurante.</p>
-    </div>
-    <div class="auth-footer">© 2026 Renato Nicolas Olaechea Mendoza · Shark.AI</div>
-  </div>
-  <div class="auth-right">
-    <div class="auth-form-box">
-      <div class="auth-form-title">Bienvenido de vuelta</div>
-      
-      <div class="field">
-        <label>Correo electrónico</label>
-        <input type="email" id="l-email" placeholder="tu@restaurante.com">
+<!-- ══════════════════════════════════════════
+     LANDING PAGE
+══════════════════════════════════════════ -->
+<div class="page lp-page active" id="page-landing">
+
+  <nav class="lp-nav">
+    <div class="lp-wrap lp-nav-inner">
+      <a class="lp-logo" onclick="showPage('page-landing')"><span class="lp-logo-dot"></span>Shark.AI</a>
+      <div class="lp-nav-links">
+        <a href="#lp-como-funciona">Cómo funciona</a>
+        <a href="#lp-industrias">Industrias</a>
+        <a href="#lp-precios" onclick="showPage('page-registro')">Precios</a>
       </div>
-      <div class="field" style="margin-top:12px">
-        <div style="display:flex;justify-content:space-between;margin-bottom:5px">
-          <label style="margin:0">Contraseña</label>
-          <a style="font-size:12px;color:#6b7280;cursor:pointer">¿Olvidaste tu contraseña?</a>
+      <div class="lp-nav-actions">
+        <button class="lp-btn-ghost" onclick="showPage('page-login')">Iniciar sesión</button>
+        <button class="lp-btn lp-btn-primary" onclick="showPage('page-registro')">Comenzar ahora</button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="lp-hero">
+    <div class="lp-wrap lp-hero-inner">
+      <div class="lp-hero-left">
+        <div class="lp-tag">Para restaurantes en Perú</div>
+        <h1>El teléfono de tu<br>restaurante que<br><em>siempre contesta.</em></h1>
+        <p class="lp-hero-sub">Shark.AI contesta cada llamada, toma el pedido conversando en español y lo manda directo a tu cocina. Lima, Arequipa, Cusco, Trujillo y todo el Perú.</p>
+        <div class="lp-hero-ctas">
+          <button class="lp-btn lp-btn-primary lp-btn-lg" onclick="showPage('page-registro')">Comenzar ahora</button>
+          <a class="lp-link-light" href="#lp-como-funciona">Ver cómo funciona →</a>
         </div>
-        <input type="password" id="l-pass" placeholder="••••••••">
       </div>
-      <div id="l-err" style="color:#dc2626;font-size:12px;margin-top:6px;display:none">Correo o contraseña incorrectos</div>
-      <button onclick="doLogin()" style="margin-top:14px;width:100%;padding:11px;background:#c8f05a;color:#0a0a0f;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;transition:background .2s">Iniciar sesión</button>
-      
+      <div class="lp-call-card">
+        <div class="lp-call-head"><span>Llamada #1042 · Restaurante</span><span>00:00 / 00:34</span></div>
+        <div class="lp-call-bubble cliente">
+          <div class="lp-call-who">Cliente</div>
+          Quiero un ceviche mixto y una chicha morada, para recoger en 20 minutos.
+        </div>
+        <div class="lp-call-bubble shark">
+          <div class="lp-call-who">Shark</div>
+          Van un ceviche mixto y una chicha morada. ¿A nombre de quién lo preparamos? Te mando el link de pago por WhatsApp.
+        </div>
+        <div class="lp-call-result">✓ Pedido tomado · Pickup 20 min · S/ 45</div>
+      </div>
     </div>
-  </div>
+  </header>
+
+  <section class="lp-section" id="lp-como-funciona">
+    <div class="lp-wrap">
+      <div class="lp-eyebrow">§ Cómo funciona</div>
+      <h2 class="lp-h2">Contesta, toma el pedido y lo manda a tu cocina.</h2>
+      <div class="lp-steps">
+        <div class="lp-step">
+          <div class="lp-step-num">01 · CONECTA</div>
+          <h3>Tu mismo número.</h3>
+          <p>Conectamos Shark.AI con tu línea actual en 48 horas. El cliente marca igual que siempre — y contesta ella, al primer timbrazo.</p>
+        </div>
+        <div class="lp-step">
+          <div class="lp-step-num">02 · CONVERSA</div>
+          <h3>Voz humana, en español.</h3>
+          <p>Toma el pedido conversando — sin "presione 1", sin robot. Entiende modismos peruanos y acentos regionales.</p>
+        </div>
+        <div class="lp-step">
+          <div class="lp-step-num">03 · ENTREGA</div>
+          <h3>Directo a tu cocina.</h3>
+          <p>El pedido llega a tu dashboard de Shark.AI en tiempo real. Pickup o delivery, listo para preparar — sin cliente esperando en línea.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lp-focus" id="lp-industrias">
+    <div class="lp-wrap lp-section lp-focus-inner">
+      <div class="lp-focus-left">
+        <div class="lp-eyebrow">● Nuestro enfoque</div>
+        <h2>Restaurantes.</h2>
+        <p>Porque un pedido perdido el viernes a las 8pm no se recupera. Shark.AI está diseñada para la hora punta: responde varias llamadas a la vez, conoce tu menú al derecho y al revés, y cobra al instante.</p>
+        <div class="lp-check"><span class="mark">✓</span>Pedidos de pickup y delivery</div>
+        <div class="lp-check"><span class="mark">✓</span>Menú completo en memoria — modificadores, alérgenos, precios</div>
+        <div class="lp-check"><span class="mark">✓</span>Confirmación por WhatsApp con tiempo estimado</div>
+        <div class="lp-check"><span class="mark">✓</span>FAQ 24/7 — horario, ubicación, opciones</div>
+
+        <div class="lp-chips">
+          <span class="lp-chip">Call centers</span>
+          <span class="lp-chip">Hoteles</span>
+          <span class="lp-chip">Oficinas</span>
+          <span class="lp-chip">Clínicas</span>
+          <span class="lp-chip">Talleres</span>
+          <span class="lp-chip">Peluquerías</span>
+        </div>
+      </div>
+      <div class="lp-dash-card">
+        <div class="lp-dash-head">Vista del dashboard · Hoy</div>
+        <div class="lp-dash-row"><span class="lp-dash-time">20:34</span><span class="lp-dash-who">Carlos M. · Pickup</span><span class="lp-dash-amt">S/ 42</span><span class="lp-dash-badge live">LIVE</span></div>
+        <div class="lp-dash-row"><span class="lp-dash-time">20:31</span><span class="lp-dash-who">L. García · Delivery</span><span class="lp-dash-amt">S/ 68</span><span class="lp-dash-badge done">✓</span></div>
+        <div class="lp-dash-row"><span class="lp-dash-time">20:22</span><span class="lp-dash-who">+51 999·213</span><span class="lp-dash-amt">S/ 29</span><span class="lp-dash-badge done">✓</span></div>
+        <div class="lp-dash-row"><span class="lp-dash-time">20:18</span><span class="lp-dash-who">Jorge R. · Delivery</span><span class="lp-dash-amt">S/ 112</span><span class="lp-dash-badge done">✓</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lp-testimonial">
+    <div class="lp-wrap">
+      <div class="lp-quote">"Antes perdíamos pedidos en la hora punta. Ahora Shark.AI contesta todas las llamadas — y salen más pedidos que nunca."</div>
+      <div class="lp-quote-by">Dueño de restaurante · Lima, Perú</div>
+    </div>
+  </section>
+
+  <section class="lp-final" id="lp-precios">
+    <div class="lp-wrap">
+      <h2>Deja de perder pedidos por llamada.</h2>
+      <p>Crea tu cuenta en minutos y configura a Shark.AI para tu restaurante.</p>
+      <button class="lp-btn lp-btn-primary lp-btn-lg" onclick="showPage('page-registro')">Comenzar ahora</button>
+      <div class="lp-final-note">Sin tarjeta para empezar · Cancela cuando quieras</div>
+    </div>
+  </section>
+
+  <footer class="lp-footer">
+    <div class="lp-wrap lp-footer-inner">
+      <p><strong style="color:rgba(255,255,255,.7)">Shark.AI</strong><br>Recepcionista virtual con IA para restaurantes. Contestamos cada llamada para que tú te enfoques en cocinar.</p>
+      <div class="lp-footer-col">
+        <h4>Producto</h4>
+        <a href="#lp-como-funciona">Cómo funciona</a>
+        <a href="#lp-industrias">Industrias</a>
+        <a onclick="showPage('page-registro')">Crear cuenta</a>
+      </div>
+      <div class="lp-footer-col">
+        <h4>Contacto</h4>
+        <a>hola@sharkai.pe</a>
+        <a>Perú</a>
+      </div>
+    </div>
+    <div class="lp-wrap lp-footer-bottom">© 2026 Renato Nicolas Olaechea Mendoza · Shark.AI · Hecho en Perú</div>
+  </footer>
+
 </div>
-
-<!-- ═══ REGISTRO ═══ -->
-<div class="page" id="page-registro" style="display:none!important">
-  <div class="auth-left">
-    <div class="auth-logo"><span class="auth-logo-dot"></span>Shark.AI</div>
-    <div class="auth-left-content">
-      <div class="auth-left-tag">Crea tu cuenta</div>
-      <h2>En 5 minutos<br><em>Shark contesta.</em></h2>
-      <p>Configura tu restaurante y empieza a recibir pedidos automáticamente.</p>
-    </div>
-    <div class="auth-footer">© 2026 Renato Nicolas Olaechea Mendoza · Shark.AI</div>
-  </div>
-  <div class="auth-right">
-    <div class="auth-form-box">
-      <div class="auth-form-title">Crear cuenta</div>
-      <div class="auth-form-sub">¿Ya tienes cuenta? <a style="cursor:pointer" onclick="showPage('page-login')">Inicia sesión</a></div>
-      <div class="field"><label>Nombre completo</label><input type="text" id="r-nombre" placeholder="Renato Olaechea"></div>
-      <div class="field" style="margin-top:10px"><label>Correo</label><input type="email" id="r-email" placeholder="tu@restaurante.com"></div>
-      <div class="field" style="margin-top:10px"><label>Contraseña</label><input type="password" id="r-pass" placeholder="Mínimo 6 caracteres"></div>
-      <div class="field" style="margin-top:10px"><label>Nombre del restaurante</label><input type="text" id="r-negocio" placeholder="Ej: La Huerta de Ica"></div>
-      <div class="field" style="margin-top:10px"><label>Teléfono</label><input type="tel" id="r-tel" placeholder="+51 999 000 000"></div>
-      <div class="field" style="margin-top:10px"><label>Plan</label>
-        <select style="width:100%;padding:10px 12px;border:1px solid #e8e9ec;border-radius:8px;font-family:inherit;font-size:14px;outline:none;background:#fff">
-          <option>Starter — S/ 299/mes</option><option>Pro — S/ 499/mes</option><option>Business — S/ 799/mes</option>
-        </select>
-      </div>
-      <button onclick="doRegister()" style="margin-top:16px;width:100%;padding:11px;background:#c8f05a;color:#0a0a0f;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit">Crear mi cuenta</button>
-      <div style="text-align:center;margin-top:14px;font-size:13px;color:#6b7280">
-        ¿Ya tienes cuenta? <a style="color:#0a0a0f;font-weight:500;text-decoration:underline;cursor:pointer" onclick="showPage('page-login')">Inicia sesión</a>
-      </div>
-    </div>
-  </div>
-</div>
-
-
 
 <!-- ══════════════════════════════════════════
      LOGIN PAGE
 ══════════════════════════════════════════ -->
-<div class="page auth-page active" id="page-login">
+<div class="page auth-page" id="page-login">
   <div class="auth-left">
     <div class="auth-logo"><span class="auth-logo-dot"></span>Shark.AI</div>
     <div class="auth-left-content">
@@ -474,7 +640,7 @@ tbody tr:hover td { background:#fafafa; cursor:pointer; }
   <div class="auth-right">
     <div class="auth-form-box">
       <div class="auth-form-title">Bienvenido de vuelta</div>
-      <div class="auth-form-sub">¿No tienes cuenta? <a onclick="goTo('page-registro')">Regístrate</a></div>
+      <div class="auth-form-sub">¿No tienes cuenta? <a onclick="showPage('page-registro')">Regístrate</a></div>
       <div class="field">
         <label>Correo electrónico</label>
         <input type="email" id="l-email" placeholder="tu@restaurante.com">
@@ -490,7 +656,7 @@ tbody tr:hover td { background:#fafafa; cursor:pointer; }
       </div>
       <button class="btn-primary" onclick="doLogin()">Iniciar sesión</button>
       <div style="text-align:center;margin-top:20px;font-size:13px;color:var(--text2)">
-        ¿Primera vez aquí? <a style="color:var(--ink);font-weight:500;text-decoration:underline;cursor:pointer" onclick="goTo('page-registro')">Crea tu cuenta</a>
+        ¿Primera vez aquí? <a style="color:var(--ink);font-weight:500;text-decoration:underline;cursor:pointer" onclick="showPage('page-registro')">Crea tu cuenta</a>
       </div>
     </div>
   </div>
@@ -517,7 +683,7 @@ tbody tr:hover td { background:#fafafa; cursor:pointer; }
   <div class="auth-right">
     <div class="auth-form-box">
       <div class="auth-form-title">Crear cuenta</div>
-      <div class="auth-form-sub">¿Ya tienes cuenta? <a onclick="goTo('page-login')">Inicia sesión</a></div>
+      <div class="auth-form-sub">¿Ya tienes cuenta? <a onclick="showPage('page-login')">Inicia sesión</a></div>
 
       <div class="step-ind">
         <div class="step-ind-dot active" id="r-dot1">1</div>
@@ -568,15 +734,15 @@ tbody tr:hover td { background:#fafafa; cursor:pointer; }
       <div class="step-panel" id="r-step3">
         <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:12px">Elige tu plan</div>
         <div class="plan-cards">
-          <div class="plan-card" onclick="selPlan(this)">
+          <div class="plan-card" data-plan="Starter" onclick="selPlan(this)">
             <div class="plan-radio"><div class="plan-radio-dot"></div></div>
             <div><div class="plan-name">Starter</div><div class="plan-price">S/ 299 / mes</div><div class="plan-features">300 llamadas · 1 número · Dashboard básico</div></div>
           </div>
-          <div class="plan-card selected" onclick="selPlan(this)">
+          <div class="plan-card selected" data-plan="Pro" onclick="selPlan(this)">
             <div class="plan-radio"><div class="plan-radio-dot"></div></div>
             <div><div class="plan-name">Pro <span class="plan-badge">Más popular</span></div><div class="plan-price">S/ 499 / mes</div><div class="plan-features">Llamadas ilimitadas · 2 números · WhatsApp</div></div>
           </div>
-          <div class="plan-card" onclick="selPlan(this)">
+          <div class="plan-card" data-plan="Business" onclick="selPlan(this)">
             <div class="plan-radio"><div class="plan-radio-dot"></div></div>
             <div><div class="plan-name">Business</div><div class="plan-price">S/ 799 / mes</div><div class="plan-features">Todo Pro + múltiples locales · API</div></div>
           </div>
@@ -1149,6 +1315,7 @@ const SUPABASE_URL = 'https://ybaavdmbupcaeappuepm.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InliYWF2ZG1idXBjYWVhcHB1ZXBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3MTg2MzIsImV4cCI6MjA5NDI5NDYzMn0.UW1mzjK7EcUVHzEH2F6KvwUBjJ0uwGrxf3UdO0_ig5w';
 var sb;
 var currentNegocio = null;
+var regStep = 1;
 
 window.addEventListener('DOMContentLoaded', function() {
   sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -1184,24 +1351,6 @@ async function doLogin() {
   setTimeout(function() { showSection('dashboard'); buildChart(); animateStats(); }, 150);
 }
 
-async function doRegister() {
-  var nombre  = document.getElementById('r-nombre').value.trim();
-  var email   = document.getElementById('r-email').value.trim();
-  var pass    = document.getElementById('r-pass').value;
-  var negocio = document.getElementById('r-negocio').value.trim();
-  var tel     = document.getElementById('r-tel').value.trim();
-  if (!nombre || !email || pass.length < 6 || !negocio) { alert('Completa todos los campos'); return; }
-  var btn = document.querySelector('#page-registro button');
-  btn.textContent = 'Creando...'; btn.disabled = true;
-  var r = await sb.auth.signUp({ email: email, password: pass });
-  if (r.error) { btn.textContent='Crear mi cuenta'; btn.disabled=false; alert('Error: '+r.error.message); return; }
-  var ins = await sb.from('negocios').insert({ nombre: negocio, email: email, telefono: tel, owner_id: r.data.user.id, shark_bienvenida: 'Hola, gracias por llamar a '+negocio+'. Soy Shark.' });
-  console.log('Insert result:', ins);
-  await loadNegocio(r.data.user.id);
-  btn.textContent='Crear mi cuenta'; btn.disabled=false;
-  showPage('page-app');
-  setTimeout(function() { showSection('dashboard'); buildChart(); animateStats(); }, 150);
-}
 
 async function loadNegocio(userId) {
   var r = await sb.from('negocios').select('*').eq('owner_id', userId).single();
@@ -1287,11 +1436,25 @@ function rStep3() {
   if(!neg||!tel){alert('Completa los campos requeridos');return;}
   rGoStep(3);
 }
-function doRegistro() {
-  if(!document.getElementById('r-terms').checked){alert('Acepta los términos');return;}
-  document.getElementById('r-step3').style.display='none';
-  document.getElementById('r-success').style.display='block';
-  setTimeout(()=>{goTo('page-app');buildChart();animateStats();},1800);
+async function doRegistro() {
+  if (!document.getElementById('r-terms').checked) { alert('Acepta los términos'); return; }
+  var nombre  = document.getElementById('r-nombre').value.trim();
+  var email   = document.getElementById('r-email').value.trim();
+  var pass    = document.getElementById('r-pass').value;
+  var negocio = document.getElementById('r-negocio').value.trim();
+  var tel     = document.getElementById('r-tel').value.trim();
+  var planCard = document.querySelector('.plan-card.selected');
+  var plan = planCard ? planCard.getAttribute('data-plan') : 'Pro';
+  var btn = document.querySelector('#r-step3 .btn-next');
+  btn.textContent = 'Creando...'; btn.disabled = true;
+  var r = await sb.auth.signUp({ email: email, password: pass });
+  if (r.error) { btn.textContent='Crear mi cuenta'; btn.disabled=false; alert('Error: '+r.error.message); return; }
+  var ins = await sb.from('negocios').insert({ nombre: negocio, email: email, telefono: tel, plan: plan, owner_id: r.data.user.id, shark_bienvenida: 'Hola, gracias por llamar a '+negocio+'. Soy Shark.' });
+  console.log('Insert result:', ins);
+  await loadNegocio(r.data.user.id);
+  document.getElementById('r-step3').style.display = 'none';
+  document.getElementById('r-success').style.display = 'block';
+  setTimeout(function() { showPage('page-app'); showSection('dashboard'); buildChart(); animateStats(); }, 1200);
 }
 function selPlan(card) {
   document.querySelectorAll('.plan-card').forEach(c=>c.classList.remove('selected'));
